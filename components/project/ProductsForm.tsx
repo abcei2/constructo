@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Product } from "../../types/dbTypes";
+import Modal from "../Modal";
+import ProductsModalForm from "./ProductsModalForm";
 
 
 const ProductsForm = () => {
 
+    const [productModalData, setProductModalData] = useState<Product | undefined>()
+    const [productIndex, setProductIndex] = useState<number>(-1)
+    const [showModal, setShowModal] = useState<boolean>(false)
     const {
         register,
         control
@@ -16,13 +22,19 @@ const ProductsForm = () => {
         mode: "onBlur"
     });
 
-    const { fields, append, remove } = useFieldArray({
+    const { fields, append, remove, update } = useFieldArray({
         name: "products",
         control
     });
 
     return (
         <div className="w-full ">
+            {
+                productModalData && <Modal title="testmodal" showModal={showModal} setShowModal={setShowModal} >
+                    <ProductsModalForm productModalData={productModalData} setShowModal={setShowModal} productIndex={productIndex} update={update} />
+                </Modal>
+            }
+
             <div className="flex justify-center m-8 text-2xl font-bold md:text-4xl ">
                 <h1>LISTA DE PRODUCTOS</h1>
             </div>
@@ -55,6 +67,7 @@ const ProductsForm = () => {
                             fields.length > 0 &&
                             <tr className="">
                                 <th></th>
+                                <th></th>
                                 <th>Nombre</th>
                                 <th>Marca</th>
                                 <th>Proveedor</th>
@@ -72,6 +85,15 @@ const ProductsForm = () => {
                                     return (
 
                                         <tr key={field.id}>
+                                            <th>
+                                                <button type="button" onClick={() => {
+                                                    setProductModalData(field);
+                                                    setProductIndex(index)
+                                                    setShowModal(true);
+                                                }}>
+                                                    🗎
+                                                </button>
+                                            </th>
                                             <th>
                                                 <button onClick={() => {
                                                     remove(index)
