@@ -25,6 +25,7 @@ const WagesModalForm = (props: WagesModalFormType) => {
         setShowModal(false)
     }
     const onError = () => toast.error("Faltan datos por llenar!");
+    
     return (
         <div>
             <ToastContainer/>
@@ -32,6 +33,7 @@ const WagesModalForm = (props: WagesModalFormType) => {
                 onSubmit={handleSubmit(onSubmit, onError)}
                 className="overflow-auto gap-3 h-64 max-h-64 py-5 border border-2 border-red-300"
             >
+
                 <div>
                     <div  >
                         <input className="normal-input"

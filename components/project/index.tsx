@@ -1,11 +1,10 @@
 import ProductsForm from "./ProductsForm"
+import WagesForm from "./WagesForm"
 
 const ProjectIndex = () =>{
     return (
-        <div className="flex justify-center">
-            <div className="max-w-[90%]">
-                <ProductsForm/>
-            </div>
+        <div className="flex flex-col justify-center">
+          
 
             <div >
                 <WagesForm />
