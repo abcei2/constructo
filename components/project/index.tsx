@@ -6,6 +6,10 @@ const ProjectIndex = () =>{
             <div className="max-w-[90%]">
                 <ProductsForm/>
             </div>
+
+            <div >
+                <WagesForm />
+            </div>
         </div>
     )
 }

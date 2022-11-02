@@ -2,7 +2,7 @@ export type Project = {
     name:string
 }
 
-export type EmployeesWage = {
+export type EmployeeWage = {
     roleName: string,
     estimatedIncrease: number,
     transportAllowance: number,
@@ -13,7 +13,7 @@ export type EmployeesWage = {
 }
 
 type EmployeeAmount = {
-    wageKind: EmployeesWage,
+    wageKind: EmployeeWage,
     amount: number
 }
 
