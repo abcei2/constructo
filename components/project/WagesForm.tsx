@@ -42,7 +42,9 @@ const WagesForm = () => {
                     <WagesModalForm wageModalData={wageModalData} setShowModal={setShowModal} wageIndex={wageIndex} update={update}/>
                 </Modal>
             }
-          
+          <div className="flex justify-center m-8 text-2xl font-bold md:text-4xl">
+            <h1>SALARIOS</h1>
+          </div>
 
             <form onSubmit={handleSubmit(onSubmit, onError)}>
 

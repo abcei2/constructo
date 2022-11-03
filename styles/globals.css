@@ -3,8 +3,15 @@
 @tailwind utilities;
 
 @layer components {
+
+
     .normal-input {
-        @apply border border-blue-500 rounded text-center
+        @apply border border-blue-500 rounded text-center mb-4 
     }
+
+    .label-des {
+        @apply m-8 font-medium text-xs 
+    }
+    
 
 }

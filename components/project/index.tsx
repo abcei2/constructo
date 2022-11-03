@@ -5,6 +5,9 @@ const ProjectIndex = () =>{
     return (
         <div className="flex flex-col justify-center">
           
+            <div >
+                <ProductsForm />
+            </div>
 
             <div >
                 <WagesForm />

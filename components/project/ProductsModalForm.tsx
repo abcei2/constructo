@@ -36,6 +36,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
 
                 <div>
                     <div  >
+                        <label className="label-des">Categoria</label>
                         <input className="normal-input"
                             {...register("category", {
                                 required: true
@@ -44,6 +45,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                     </div>
 
                     <div>
+                    <label className="label-des">Nombre</label>
                         <input className="normal-input" 
                             {...register("name", {
                                 required: true,
@@ -52,6 +54,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                     </div>
 
                     <div>
+                    <label className="label-des">Marca</label>
                         <input className="normal-input"
                             {...register("brand", {
                                 required: true
@@ -60,6 +63,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                     </div>
 
                     <div>
+                    <label className="label-des">Proveedor</label>
                         <input className="normal-input"
                             {...register("provider", {
                                 required: true
@@ -68,6 +72,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                     </div>
 
                     <div>
+                    <label className="label-des">Precio</label>
                         <input className="normal-input" type="numeric"
                             {...register("price", {
                                 required: true
@@ -77,6 +82,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
 
 
                     <div>
+                    <label className="label-des">Tipo</label>
                         <input className="normal-input"
                             {...register("type", {
                                 required: true
@@ -85,6 +91,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                     </div>
 
                     <div>
+                    <label className="label-des">Descuento</label>
                         <input className="normal-input" type="numeric"
                             {...register("discount", {
                                 required: true
@@ -93,6 +100,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                     </div>
 
                     <div>
+                    <label className="label-des">Rendimiento</label>
                         <input className="normal-input" type="numeric"
                             {...register("performance", {
                                 required: true
@@ -101,7 +109,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                     </div>
                 </div>
       
-
+                <div className="flex justify-center">
                 <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     
@@ -109,7 +117,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                 >
                     Save Changes
                 </button>
-
+                </div>
             </form>
 
         </div>
