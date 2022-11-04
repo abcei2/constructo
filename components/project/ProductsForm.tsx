@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Product } from "../../types/dbTypes";
+import useProjectForm from "../hooks/project/useProjectForm";
 import Modal from "../Modal";
 import ProductsModalForm from "./ProductsModalForm";
 
@@ -10,22 +11,7 @@ const ProductsForm = () => {
     const [productModalData, setProductModalData] = useState<Product | undefined>()
     const [productIndex, setProductIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)
-    const {
-        register,
-        control
-    } = useForm<{
-        concept: string,
-        updateDate: Date;
-        owner: string;
-        products: Array<Product>
-    }>({
-        mode: "onBlur"
-    });
-
-    const { fields, append, remove, update } = useFieldArray({
-        name: "products",
-        control
-    });
+    const { register, fields, append, remove, update }  = useProjectForm()
 
     return (
         <div className="w-full ">

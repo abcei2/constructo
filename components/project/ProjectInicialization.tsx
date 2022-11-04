@@ -1,5 +1,6 @@
-import { stringify } from "querystring"
 import { useState } from "react"
+import { WagesFormTypes } from "../../types/extraTypes"
+import useWagesForm from "../hooks/project/useWagesForm"
 import Stepper from "../Stepper"
 import WagesForm from "./WagesForm"
 
@@ -8,7 +9,10 @@ const ProjectInitiation = () => {
     const [categories, setCategories] = useState<Array<string>>([])
     const [projectName, setProjectName] = useState<string>()
     const [currentCategory, setCurrentCategory] = useState<string>()
+
     const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos"]
+
+    const {formId} = useWagesForm()
 
     const nextStep = () => {
         if (whichStepIndex < stepNames.length - 1)
@@ -43,6 +47,11 @@ const ProjectInitiation = () => {
         if (event.key === 'Enter') {
             addCategory()
         }
+    }
+
+    const onWageFormSubmit = (data: WagesFormTypes) =>{
+        console.log(data)
+
     }
     const whichStepContainer = () => {
         switch (whichStepIndex) {
@@ -88,7 +97,7 @@ const ProjectInitiation = () => {
 
                 </div>
             case 2:
-                return <WagesForm />
+                return <WagesForm onFormSubmit={onWageFormSubmit} />
             default:
                 return
 
@@ -107,7 +116,12 @@ const ProjectInitiation = () => {
                 <div className="flex p-2 mt-4">
                     <button onClick={prevStep} className="button-normal">Previous</button>
                     <div className="flex-auto flex flex-row-reverse">
-                        <button onClick={nextStep} className="button-primary">{whichStepIndex < stepNames.length - 1?"Next":"Save"}</button>
+                        <button 
+                            onClick={nextStep} 
+                            className="button-primary"
+                            type={whichStepIndex < stepNames.length - 1?"button":"submit"}
+                            form={formId}
+                        >{whichStepIndex < stepNames.length - 1?"Next":"Save"}</button>
                         {
                             whichStepIndex < stepNames.length - 1 && <button onClick={nextStep} className="button-secondary">Skip</button>
                         }

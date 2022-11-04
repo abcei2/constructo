@@ -5,36 +5,18 @@ import Modal from "../Modal";
 import WagesModalForm from "./WageModalForm";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useWagesForm from "../hooks/project/useWagesForm";
+import { WagesFormTypes } from "../../types/extraTypes";
 
-type WagesFormTypes={
-    employeesWage: Array<EmployeeWage>
-}
-const WagesForm = () => {
+const WagesForm = (props:{
+    onFormSubmit?:any,
+    onFormError?:any
+}) => {
+    const { onFormSubmit, onFormError }= props
     const [wageModalData, setWageModalData] = useState<EmployeeWage | undefined>()
     const [wageIndex, setWageIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)
-    const {
-        register,
-        control,
-        handleSubmit,
-        setValue
-    } = useForm<WagesFormTypes>({
-        mode: "onBlur"
-    });
-
-    const { fields, append, remove, update } = useFieldArray({
-        name: "employeesWage",
-        control
-    });
-
-    const onSubmit = (data: WagesFormTypes) => {
-        console.log("SUBMIT?")
-        toast.success("La información ingresada es correcta")
-
-        setShowModal(false)
-    }
-    const onError = () => toast.error("Faltan datos por llenar!");
-
+    const { register, fields, append, remove, update, handleSubmit, formId } = useWagesForm()
     return (
         <div>
             {
@@ -46,7 +28,7 @@ const WagesForm = () => {
             <h1>SALARIOS</h1>
           </div>
 
-            <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <form id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)}>
 
 
                 <div
