@@ -38,7 +38,7 @@ const WagesForm = () => {
     return (
         <div>
             {
-                wageModalData && <Modal title="testmodal" showModal={showModal} setShowModal={setShowModal} >
+                wageModalData && <Modal title="SALARIOS" showModal={showModal} setShowModal={setShowModal} >
                     <WagesModalForm wageModalData={wageModalData} setShowModal={setShowModal} wageIndex={wageIndex} update={update}/>
                 </Modal>
             }

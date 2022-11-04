@@ -30,7 +30,7 @@ const ProductsForm = () => {
     return (
         <div className="w-full ">
             {
-                productModalData && <Modal title="testmodal" showModal={showModal} setShowModal={setShowModal} >
+                productModalData && <Modal title="PRODUCTOS" showModal={showModal} setShowModal={setShowModal} >
                     <ProductsModalForm productModalData={productModalData} setShowModal={setShowModal} productIndex={productIndex} update={update} />
                 </Modal>
             }
