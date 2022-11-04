@@ -1,26 +1,23 @@
 import { useFieldArray, useForm } from "react-hook-form";
 import { Product } from "../../../types/dbTypes";
+import { ProductsFormType } from "../../../types/extraTypes";
 
-const useProjectForm = () =>{
+const useProductsForm = () => {
+    const formId = "products"
     const {
         register,
         control,
         handleSubmit,
-    } = useForm<{
-        concept: string,
-        updateDate: Date;
-        owner: string;
-        products: Array<Product>
-    }>({
+    } = useForm<ProductsFormType>({
         mode: "onBlur"
     });
 
     const { fields, append, remove, update } = useFieldArray({
-        name: "products",
+        name: formId,
         control
     });
 
-    return { register, fields, append, remove, update, handleSubmit }
+    return { register, fields, append, remove, update, handleSubmit, formId }
 }
 
- export default useProjectForm
+export default useProductsForm
