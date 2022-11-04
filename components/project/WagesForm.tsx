@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { FieldArrayWithId, useFieldArray, UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayUpdate, useForm, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
+import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayUpdate, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import { EmployeeWage } from "../../types/dbTypes";
 import Modal from "../Modal";
 import WagesModalForm from "./WageModalForm";
 import 'react-toastify/dist/ReactToastify.css';
 import { WagesFormTypes } from "../../types/extraTypes";
-
-const WagesForm = (props:{
-    register: UseFormRegister<WagesFormTypes>, 
+type WagesFormPropsTypes = {
+    register: UseFormRegister<WagesFormTypes>,
     fields: FieldArrayWithId<WagesFormTypes, "employeesWage", "id">[],
-    append: UseFieldArrayAppend<WagesFormTypes, "employeesWage">, 
+    append: UseFieldArrayAppend<WagesFormTypes, "employeesWage">,
     remove: UseFieldArrayRemove,
     update: UseFieldArrayUpdate<WagesFormTypes, "employeesWage">,
     handleSubmit: UseFormHandleSubmit<WagesFormTypes>,
@@ -17,7 +16,8 @@ const WagesForm = (props:{
     onFormSubmit?: any,
     onFormError?: any,
     defaultValues?: EmployeeWage,
-}) => {
+}
+const WagesForm = (props: WagesFormPropsTypes) => {
 
     const { onFormSubmit, onFormError, register, fields, append, remove, update, handleSubmit, formId }= props
     const [wageModalData, setWageModalData] = useState<EmployeeWage | undefined>()
@@ -38,7 +38,7 @@ const WagesForm = (props:{
             <form id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)}>
 
                 <div
-                    className=" overflow-auto gap-3 h-64 max-h-64 py-5 border border-2 border-red-300"
+                    className=" overflow-auto gap-3 h-64 max-h-64 py-5 border border-2 border-teal-600 rounded"
                 >
                     <table className="">
                         <thead>
@@ -154,9 +154,10 @@ const WagesForm = (props:{
                     </table>
 
                 </div>
-                <div className="text-right">
+                <div className="flex justify-end  py-5">
+                  
                     <button
-                        className="normal-button  my-5"
+                        className="button-secondary "
                         type="button"
                         onClick={() => {
                             const initialValue: EmployeeWage = {
