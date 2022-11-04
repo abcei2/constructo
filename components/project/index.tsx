@@ -1,4 +1,5 @@
 import ProductsForm from "./ProductsForm"
+import ProjectInitiation from "./ProjectInicialization"
 import WagesForm from "./WagesForm"
 
 const ProjectIndex = () =>{
@@ -6,12 +7,9 @@ const ProjectIndex = () =>{
         <div className="flex flex-col justify-center">
           
             <div >
-                <ProductsForm />
+                <ProjectInitiation />
             </div>
 
-            <div >
-                <WagesForm />
-            </div>
         </div>
     )
 }
