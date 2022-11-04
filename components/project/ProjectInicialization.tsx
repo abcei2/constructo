@@ -1,7 +1,9 @@
 import { useState } from "react"
-import { WagesFormTypes } from "../../types/extraTypes"
+import { ProductsFormType, WagesFormTypes } from "../../types/extraTypes"
+import useProductsForm from "../hooks/project/useProductsForm"
 import useWagesForm from "../hooks/project/useWagesForm"
 import Stepper from "../Stepper"
+import ProductsForm from "./ProductsForm"
 import WagesForm from "./WagesForm"
 
 const ProjectInitiation = () => {
@@ -10,10 +12,10 @@ const ProjectInitiation = () => {
     const [projectName, setProjectName] = useState<string>()
     const [currentCategory, setCurrentCategory] = useState<string>()
 
-    const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos"]
+    const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos", "Crear productos"]
 
-    const { register, fields, append, remove, update, handleSubmit, formId } = useWagesForm()
-
+    const { register:registerWages, fields:fieldsWages, append:appendWages, remove:removeWages, update:updateWages, handleSubmit:handleSubmitWages, formId:formIdWages } = useWagesForm()
+    const { register: registerProducts, fields: fieldsProducts, append: appendProducts, remove: removeProducts, update: updateProducts, handleSubmit: handleSubmitProducts, formId: formIdProducts } = useProductsForm()
     const nextStep = () => {
         if (whichStepIndex < stepNames.length - 1)
             setWhichStepIndex(whichStepIndex + 1)
@@ -49,7 +51,15 @@ const ProjectInitiation = () => {
         }
     }
 
-    const onWageFormSubmit = (data: WagesFormTypes) =>{
+    const onWagesFormSubmit = (data: WagesFormTypes) =>{
+        console.log(data)
+        setWhichStepIndex(whichStepIndex + 1)
+
+    }
+
+
+    const onProductsFormSubmit = (data: ProductsFormType) => {
+
         console.log(data)
 
     }
@@ -98,10 +108,16 @@ const ProjectInitiation = () => {
                 </div>
             case 2:
                 return <WagesForm 
-                        register={register} fields={fields} 
-                        append={append} remove={remove} update={update} 
-                        handleSubmit={handleSubmit} formId={formId}
-                        onFormSubmit={onWageFormSubmit} />
+                    register={registerWages} fields={fieldsWages} 
+                    append={appendWages} remove={removeWages} update={updateWages} 
+                    handleSubmit={handleSubmitWages} formId={formIdWages}
+                    onFormSubmit={onWagesFormSubmit} />
+            case 3:
+                return <ProductsForm
+                    register={registerProducts} fields={fieldsProducts}
+                    append={appendProducts} remove={removeProducts} update={updateProducts}
+                    handleSubmit={handleSubmitProducts} formId={formIdProducts}
+                    onFormSubmit={onProductsFormSubmit} />
             default:
                 return
 
@@ -121,11 +137,11 @@ const ProjectInitiation = () => {
                     <button onClick={prevStep} className="button-normal">Previous</button>
                     <div className="flex-auto flex flex-row-reverse">
                         <button 
-                            onClick={nextStep} 
+                            onClick={whichStepIndex < stepNames.length - 2 ? nextStep:undefined} 
                             className="button-primary"
-                            type={whichStepIndex < stepNames.length - 1?"button":"submit"}
-                            form={formId}
-                        >{whichStepIndex < stepNames.length - 1?"Next":"Save"}</button>
+                            type={whichStepIndex < stepNames.length - 2?"button":"submit"}
+                            form={whichStepIndex == stepNames.length - 2?formIdWages:formIdProducts}
+                        >{whichStepIndex < stepNames.length - 2 ? "Next" : whichStepIndex == stepNames.length - 2?"Save and continue":"Save"}</button>
                         {
                             whichStepIndex < stepNames.length - 1 && <button onClick={nextStep} className="button-secondary">Skip</button>
                         }
