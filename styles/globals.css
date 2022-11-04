@@ -29,4 +29,26 @@
         @apply border-teal-600 border-2
     }
 
+
+    .button-base {
+        @apply text-base hover:scale-110
+        focus:outline-none flex justify-center
+        px-4 py-2 rounded font-bold cursor-pointer
+        border duration-200 ease-in-out border-teal-600 transition
+    }
+
+    .button-primary {
+        @apply button-base
+        ml-2 hover:bg-teal-600 bg-teal-600 text-teal-100
+    }
+
+    .button-secondary {
+        @apply button-base
+        hover:bg-teal-200 bg-teal-100 text-teal-700 
+    }
+    
+    .button-normal {
+        @apply button-base
+
+    }
 }
