@@ -6,6 +6,7 @@ import WagesForm from "./WagesForm"
 const ProjectInitiation = () => {
     const [whichStepIndex, setWhichStepIndex] = useState<number>(0)
     const [categories, setCategories] = useState<Array<string>>([])
+    const [projectName, setProjectName] = useState<string>()
     const [currentCategory, setCurrentCategory] = useState<string>()
     const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos"]
 
@@ -47,19 +48,19 @@ const ProjectInitiation = () => {
         switch (whichStepIndex) {
             case 0:
                 return <div>
-                    <div className="flex justify-center flex-col font-bold text-2xl text-center w-full">
+                    <div className="flex justify-center flex-col text-2xl text-center w-full">
                         Indique el nombre de su proyecto
-
-                        <input className="border-teal-600 rounded border-2 my-5 max-w-xs self-center" />
+                        <input value={projectName} onChange={(ev: React.ChangeEvent<HTMLInputElement>)=>setProjectName(ev.target.value)}
+                        className="text-center border-teal-600 rounded border-2 my-5 max-w-xs self-center" />
                     </div>
 
                 </div>
             case 1:
                 return <div>
-                    <div className="flex justify-center flex-col font-bold text-2xl text-center w-full">
+                    <div className="flex justify-center flex-col text-2xl text-center w-full">
                         Agregue categorías
                         <div className="flex  self-center overflow-hidden py-5 px-5 gap-2">
-                            <input onKeyDown={handleKeyDown} onChange={onCategoryNameChange} className="border-teal-600 rounded border-2" />
+                            <input value={currentCategory} onKeyDown={handleKeyDown} onChange={onCategoryNameChange} className="border-teal-600 rounded border-2" />
                             <button onClick={addCategory} className="button-secondary">Add</button>
                         </div>
 
@@ -106,8 +107,11 @@ const ProjectInitiation = () => {
                 <div className="flex p-2 mt-4">
                     <button onClick={prevStep} className="button-normal">Previous</button>
                     <div className="flex-auto flex flex-row-reverse">
-                        <button onClick={nextStep} className="button-primary">Next</button>
-                        <button onClick={nextStep} className="button-secondary">Skip</button>
+                        <button onClick={nextStep} className="button-primary">{whichStepIndex < stepNames.length - 1?"Next":"Save"}</button>
+                        {
+                            whichStepIndex < stepNames.length - 1 && <button onClick={nextStep} className="button-secondary">Skip</button>
+                        }
+                        
                     </div>
                 </div>
             </div>
