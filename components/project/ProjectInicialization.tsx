@@ -12,7 +12,7 @@ const ProjectInitiation = () => {
 
     const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos"]
 
-    const {formId} = useWagesForm()
+    const { register, fields, append, remove, update, handleSubmit, formId } = useWagesForm()
 
     const nextStep = () => {
         if (whichStepIndex < stepNames.length - 1)
@@ -97,7 +97,11 @@ const ProjectInitiation = () => {
 
                 </div>
             case 2:
-                return <WagesForm onFormSubmit={onWageFormSubmit} />
+                return <WagesForm 
+                        register={register} fields={fields} 
+                        append={append} remove={remove} update={update} 
+                        handleSubmit={handleSubmit} formId={formId}
+                        onFormSubmit={onWageFormSubmit} />
             default:
                 return
 

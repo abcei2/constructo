@@ -1,22 +1,29 @@
 import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { FieldArrayWithId, useFieldArray, UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayUpdate, useForm, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import { EmployeeWage } from "../../types/dbTypes";
 import Modal from "../Modal";
 import WagesModalForm from "./WageModalForm";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useWagesForm from "../hooks/project/useWagesForm";
 import { WagesFormTypes } from "../../types/extraTypes";
 
 const WagesForm = (props:{
-    onFormSubmit?:any,
-    onFormError?:any
+    register: UseFormRegister<WagesFormTypes>, 
+    fields: FieldArrayWithId<WagesFormTypes, "employeesWage", "id">[],
+    append: UseFieldArrayAppend<WagesFormTypes, "employeesWage">, 
+    remove: UseFieldArrayRemove,
+    update: UseFieldArrayUpdate<WagesFormTypes, "employeesWage">,
+    handleSubmit: UseFormHandleSubmit<WagesFormTypes>,
+    formId: string,
+    onFormSubmit?: any,
+    onFormError?: any,
+    defaultValues?: EmployeeWage,
 }) => {
-    const { onFormSubmit, onFormError }= props
+
+    const { onFormSubmit, onFormError, register, fields, append, remove, update, handleSubmit, formId }= props
     const [wageModalData, setWageModalData] = useState<EmployeeWage | undefined>()
     const [wageIndex, setWageIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)
-    const { register, fields, append, remove, update, handleSubmit, formId } = useWagesForm()
+
     return (
         <div>
             {
@@ -29,7 +36,6 @@ const WagesForm = (props:{
           </div>
 
             <form id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)}>
-
 
                 <div
                     className=" overflow-auto gap-3 h-64 max-h-64 py-5 border border-2 border-red-300"

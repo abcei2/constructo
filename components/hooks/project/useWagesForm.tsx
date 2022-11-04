@@ -1,14 +1,16 @@
 import { useFieldArray, useForm } from "react-hook-form";
 import { WagesFormTypes } from "../../../types/extraTypes";
 
-const useWagesForm = () =>{
+const useWagesForm = (defaultValues?:WagesFormTypes) =>{
     const formId = "employeesWage"
     const {
         register,
         control,
         handleSubmit,
+        getValues,
     } = useForm<WagesFormTypes>({
-        mode: "onBlur"
+        mode: "onBlur",
+        defaultValues:defaultValues
     });
 
     const { fields, append, remove, update } = useFieldArray({
@@ -16,7 +18,7 @@ const useWagesForm = () =>{
         control
     });
 
-    return { register, fields, append, remove, update, handleSubmit, formId }
+    return { getValues, register, fields, append, remove, update, handleSubmit, formId }
 }
 
  export default useWagesForm
