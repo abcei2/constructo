@@ -1,5 +1,4 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import { Product } from "../../../types/dbTypes";
 import { ProductsFormType } from "../../../types/extraTypes";
 
 const useProductsForm = (defaultValues?: ProductsFormType) => {

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayUpdate, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import { EmployeeWage } from "../../types/dbTypes";
 import Modal from "../Modal";
 import WagesModalForm from "./WageModalForm";
@@ -14,8 +13,6 @@ const WagesForm = (props: WagesFormPropsType) => {
     const [showModal, setShowModal] = useState<boolean>(false)
 
     const { fields, append, remove, update, handleSubmit, register, getValues, formId } = wagesFormUtils
-
-
     
     return (
         <div>

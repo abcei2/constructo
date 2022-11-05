@@ -1,8 +1,7 @@
-import { FormEventHandler, useState } from "react";
+import { useState } from "react";
 import { Product } from "../../types/dbTypes";
 import Modal from "../Modal";
 import ProductsModalForm from "./ProductsModalForm";
-import { Controller} from "react-hook-form";
 import { ProductsFormPropsType } from "../../types/extraTypes";
 
 

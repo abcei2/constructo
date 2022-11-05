@@ -1,5 +1,10 @@
 import { EmployeeWage, Product } from "./dbTypes"
-import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayUpdate, UseFormGetValues, UseFormHandleSubmit, UseFormRegister, UseFormSetValue } from "react-hook-form";
+
+import { 
+    FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove,
+    UseFieldArrayUpdate, UseFormGetValues, UseFormHandleSubmit, 
+    UseFormRegister, UseFormSetValue 
+} from "react-hook-form";
 
 export type WagesFormTypes = {
     employeesWage: Array<EmployeeWage>

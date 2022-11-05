@@ -1,6 +1,4 @@
-import ProductsForm from "./ProductsForm"
 import ProjectInitiation from "./ProjectInicialization"
-import WagesForm from "./WagesForm"
 
 const ProjectIndex = () =>{
     return (
@@ -9,7 +7,7 @@ const ProjectIndex = () =>{
             <div >
                 <ProjectInitiation />
             </div>
-
+            
         </div>
     )
 }
