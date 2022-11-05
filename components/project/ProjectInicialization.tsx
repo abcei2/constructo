@@ -14,8 +14,9 @@ const ProjectInitiation = () => {
 
     const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos", "Crear productos"]
 
-    const { register:registerWages, fields:fieldsWages, append:appendWages, remove:removeWages, update:updateWages, handleSubmit:handleSubmitWages, formId:formIdWages } = useWagesForm()
-    const { register: registerProducts, fields: fieldsProducts, append: appendProducts, remove: removeProducts, update: updateProducts, handleSubmit: handleSubmitProducts, formId: formIdProducts } = useProductsForm()
+    const wagesFormUtils = useWagesForm()
+    const productsFormUtils = useProductsForm()
+
     const nextStep = () => {
         if (whichStepIndex < stepNames.length - 1)
             setWhichStepIndex(whichStepIndex + 1)
@@ -108,16 +109,13 @@ const ProjectInitiation = () => {
                 </div>
             case 2:
                 return <WagesForm 
-                    register={registerWages} fields={fieldsWages} 
-                    append={appendWages} remove={removeWages} update={updateWages} 
-                    handleSubmit={handleSubmitWages} formId={formIdWages}
+
+                    wagesFormUtils={wagesFormUtils}
                     onFormSubmit={onWagesFormSubmit} />
             case 3:
                 return <ProductsForm
-                    register={registerProducts} fields={fieldsProducts}
-                    append={appendProducts} remove={removeProducts} update={updateProducts}
-                    handleSubmit={handleSubmitProducts} formId={formIdProducts}
-                    onFormSubmit={onProductsFormSubmit} />
+                    productsFormUtils={productsFormUtils}
+                    onFormSubmit={onProductsFormSubmit}/>
             default:
                 return
 
@@ -140,7 +138,7 @@ const ProjectInitiation = () => {
                             onClick={whichStepIndex < stepNames.length - 2 ? nextStep:undefined} 
                             className="button-primary"
                             type={whichStepIndex < stepNames.length - 2?"button":"submit"}
-                            form={whichStepIndex == stepNames.length - 2?formIdWages:formIdProducts}
+                            form={whichStepIndex == stepNames.length - 2 ? wagesFormUtils.formId :productsFormUtils.formId}
                         >{whichStepIndex < stepNames.length - 2 ? "Next" : whichStepIndex == stepNames.length - 2?"Save and continue":"Save"}</button>
                         {
                             whichStepIndex < stepNames.length - 1 && <button onClick={nextStep} className="button-secondary">Skip</button>

@@ -4,26 +4,19 @@ import { EmployeeWage } from "../../types/dbTypes";
 import Modal from "../Modal";
 import WagesModalForm from "./WageModalForm";
 import 'react-toastify/dist/ReactToastify.css';
-import { WagesFormTypes } from "../../types/extraTypes";
-type WagesFormPropsTypes = {
-    register: UseFormRegister<WagesFormTypes>,
-    fields: FieldArrayWithId<WagesFormTypes, "employeesWage", "id">[],
-    append: UseFieldArrayAppend<WagesFormTypes, "employeesWage">,
-    remove: UseFieldArrayRemove,
-    update: UseFieldArrayUpdate<WagesFormTypes, "employeesWage">,
-    handleSubmit: UseFormHandleSubmit<WagesFormTypes>,
-    formId: string,
-    onFormSubmit?: any,
-    onFormError?: any,
-    defaultValues?: EmployeeWage,
-}
-const WagesForm = (props: WagesFormPropsTypes) => {
+import { WagesFormPropsType } from "../../types/extraTypes";
 
-    const { onFormSubmit, onFormError, register, fields, append, remove, update, handleSubmit, formId }= props
+const WagesForm = (props: WagesFormPropsType) => {
+
+    const { onFormSubmit, onFormError, wagesFormUtils }= props
     const [wageModalData, setWageModalData] = useState<EmployeeWage | undefined>()
     const [wageIndex, setWageIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)
 
+    const { fields, append, remove, update, handleSubmit, register, getValues, formId } = wagesFormUtils
+
+
+    
     return (
         <div>
             {
@@ -71,7 +64,7 @@ const WagesForm = (props: WagesFormPropsTypes) => {
                                             <tr key={field.id}>
                                                 <th>
                                                     <button type="button" onClick={() => {
-                                                        setWageModalData(field);
+                                                        setWageModalData(getValues("employeesWage")[index]);
                                                         setWageIndex(index)
                                                         setShowModal(true);
                                                     }}>

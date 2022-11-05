@@ -1,30 +1,22 @@
-import { useState } from "react";
+import { FormEventHandler, useState } from "react";
 import { Product } from "../../types/dbTypes";
 import Modal from "../Modal";
 import ProductsModalForm from "./ProductsModalForm";
-import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayUpdate, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
-import { ProductsFormType } from "../../types/extraTypes";
+import { Controller} from "react-hook-form";
+import { ProductsFormPropsType } from "../../types/extraTypes";
 
 
-type ProductFormPropsType = {
-    register: UseFormRegister<ProductsFormType>,
-    fields: FieldArrayWithId<ProductsFormType, "products", "id">[],
-    append: UseFieldArrayAppend<ProductsFormType, "products">,
-    remove: UseFieldArrayRemove,
-    update: UseFieldArrayUpdate<ProductsFormType, "products">,
-    handleSubmit: UseFormHandleSubmit<ProductsFormType>,
-    formId: string,
-    onFormSubmit?: any,
-    onFormError?: any,
-    defaultValues?: ProductsFormType,
-}
-const ProductsForm = (props: ProductFormPropsType) => {
 
-    const { onFormSubmit, onFormError, register, fields, append, remove, update, handleSubmit, formId } = props
+const ProductsForm = (props: ProductsFormPropsType) => {
+
+    const { onFormSubmit, onFormError, productsFormUtils} = props
     const [productModalData, setProductModalData] = useState<Product | undefined>()
     const [productIndex, setProductIndex] = useState<number>(-1)
-    const [showModal, setShowModal] = useState<boolean>(false)
+    const [showModal, setShowModal] = useState<boolean>(false)    
 
+    const { fields, append, remove, update, handleSubmit, getValues, register, formId } = productsFormUtils
+
+   
     return (
         <div className="w-full " >
             {
@@ -32,7 +24,8 @@ const ProductsForm = (props: ProductFormPropsType) => {
                     <ProductsModalForm productModalData={productModalData} setShowModal={setShowModal} productIndex={productIndex} update={update} />
                 </Modal>
             }
-            <form className="w-full " id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)}>
+            <form 
+                className="w-full " id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)}>
                 <div className="flex justify-center m-8 text-2xl font-bold md:text-4xl ">
                     <h1>LISTA DE PRODUCTOS</h1>
                 </div>
@@ -85,7 +78,8 @@ const ProductsForm = (props: ProductFormPropsType) => {
                                             <tr key={field.id}>
                                                 <th>
                                                     <button type="button" onClick={() => {
-                                                        setProductModalData(field);
+                                                        console.log(field)                                                 
+                                                        setProductModalData(getValues("products")[index]);
                                                         setProductIndex(index)
                                                         setShowModal(true);
                                                     }}>
@@ -102,6 +96,7 @@ const ProductsForm = (props: ProductFormPropsType) => {
                                                     </button>
                                                 </th>
                                                 <th  >
+                                               
                                                     <input className="normal-input"
                                                         {...register(`products.${index}.name` as const, {
                                                             required: true
