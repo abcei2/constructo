@@ -1,16 +1,8 @@
-import ProjectInitiation from "./ProjectInicialization"
 
-const ProjectIndex = () =>{
+const ProjectIndex = () => {  
     return (
-        <div className="flex flex-col justify-center">
-          
-            <div >
-                <ProjectInitiation />
-            </div>
-            
+        <div>
         </div>
     )
 }
-
-
 export default ProjectIndex
