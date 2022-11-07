@@ -7,24 +7,42 @@ import ProductsForm from "./ProductsForm"
 import WagesForm from "./WagesForm"
 
 const ProjectInitiation = () => {
-    const [whichStepIndex, setWhichStepIndex] = useState<number>(0)
-    const [categories, setCategories] = useState<Array<string>>([])
+
     const [projectName, setProjectName] = useState<string>()
+    const [categories, setCategories] = useState<Array<string>>([])
     const [currentCategory, setCurrentCategory] = useState<string>()
 
+
     const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos", "Crear productos"]
+    const [stepIndex, setStepIndex] = useState<number>(0)
 
     const wagesFormUtils = useWagesForm()
     const productsFormUtils = useProductsForm()
 
+    const indexIncrease = (stepIndex:number) => {
+        if (stepIndex < stepNames.length - 1)
+            setStepIndex(stepIndex + 1)
+    }
+
     const nextStep = () => {
-        if (whichStepIndex < stepNames.length - 1)
-            setWhichStepIndex(whichStepIndex + 1)
+        switch(stepIndex){
+            case 0:
+                if (projectName && projectName != "")
+                    indexIncrease(stepIndex)
+                break;
+            case stepNames.length - 1:
+                // to save firestore and redirect
+                // project management
+                break;
+            default:
+                indexIncrease(stepIndex)
+                break;
+        }
     }
 
     const prevStep = () => {
-        if (whichStepIndex > 0)
-            setWhichStepIndex(whichStepIndex - 1)
+        if (stepIndex > 0)
+            setStepIndex(stepIndex - 1)
     }
 
     const addCategory = () => {
@@ -54,7 +72,7 @@ const ProjectInitiation = () => {
 
     const onWagesFormSubmit = (data: WagesFormTypes) =>{
         console.log(data)
-        setWhichStepIndex(whichStepIndex + 1)
+        setStepIndex(stepIndex + 1)
 
     }
 
@@ -64,8 +82,9 @@ const ProjectInitiation = () => {
         console.log(data)
 
     }
+    
     const whichStepContainer = () => {
-        switch (whichStepIndex) {
+        switch (stepIndex) {
             case 0:
                 return <div>
                     <div className="flex justify-center flex-col text-2xl text-center w-full">
@@ -83,7 +102,6 @@ const ProjectInitiation = () => {
                             <input value={currentCategory} onKeyDown={handleKeyDown} onChange={onCategoryNameChange} className="border-teal-600 rounded border-2" />
                             <button onClick={addCategory} className="button-secondary">Add</button>
                         </div>
-
                         {
                             categories && categories.map(
                                 (category: string, index: number) => {
@@ -105,11 +123,9 @@ const ProjectInitiation = () => {
                             )
                         }
                     </div>
-
                 </div>
             case 2:
                 return <WagesForm 
-
                     wagesFormUtils={wagesFormUtils}
                     onFormSubmit={onWagesFormSubmit} />
             case 3:
@@ -124,7 +140,7 @@ const ProjectInitiation = () => {
 
     return (
         <div className="p-5">
-            <Stepper whichStepIndex={whichStepIndex} setWhichStepIndex={setWhichStepIndex} stepNames={stepNames} />
+            <Stepper stepIndex={stepIndex} setStepIndex={setStepIndex} stepNames={stepNames} />
             <div className="mt-8 p-4">
                 
                 <div>
@@ -135,15 +151,12 @@ const ProjectInitiation = () => {
                     <button onClick={prevStep} className="button-normal">Previous</button>
                     <div className="flex-auto flex flex-row-reverse">
                         <button 
-                            onClick={whichStepIndex < stepNames.length - 2 ? nextStep:undefined} 
+                            onClick={stepIndex < stepNames.length - 2 ? nextStep:undefined} 
                             className="button-primary"
-                            type={whichStepIndex < stepNames.length - 2?"button":"submit"}
-                            form={whichStepIndex == stepNames.length - 2 ? wagesFormUtils.formId :productsFormUtils.formId}
-                        >{whichStepIndex < stepNames.length - 2 ? "Next" : whichStepIndex == stepNames.length - 2?"Save and continue":"Save"}</button>
-                        {
-                            whichStepIndex < stepNames.length - 1 && <button onClick={nextStep} className="button-secondary">Skip</button>
-                        }
-                        
+                            type={stepIndex < stepNames.length - 2?"button":"submit"}
+                            form={stepIndex == stepNames.length - 2 ? wagesFormUtils.formId :productsFormUtils.formId}
+                        >{stepIndex < stepNames.length - 2 ? "Next" : stepIndex == stepNames.length - 2?"Save and continue":"Save and finish"}</button>
+                        <button onClick={nextStep} className="button-secondary">{stepIndex < stepNames.length - 2 ? "Skip":"Skip ans save"}</button>                        
                     </div>
                 </div>
             </div>
