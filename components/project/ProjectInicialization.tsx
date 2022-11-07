@@ -33,6 +33,7 @@ const ProjectInitiation = () => {
             case stepNames.length - 1:
                 // to save firestore and redirect
                 // project management
+                alert("Project has to have a name")
                 break;
             default:
                 indexIncrease(stepIndex)
@@ -156,7 +157,12 @@ const ProjectInitiation = () => {
                             type={stepIndex < stepNames.length - 2?"button":"submit"}
                             form={stepIndex == stepNames.length - 2 ? wagesFormUtils.formId :productsFormUtils.formId}
                         >{stepIndex < stepNames.length - 2 ? "Next" : stepIndex == stepNames.length - 2?"Save and continue":"Save and finish"}</button>
-                        <button onClick={nextStep} className="button-secondary">{stepIndex < stepNames.length - 2 ? "Skip":"Skip ans save"}</button>                        
+                        {
+                            stepIndex==0?undefined:
+                            <button onClick={nextStep} className="button-secondary">
+                                {stepIndex < stepNames.length - 2 ? "Skip":"Skip and save"}
+                            </button> 
+                        }
                     </div>
                 </div>
             </div>
