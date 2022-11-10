@@ -37,3 +37,7 @@ export type Product = {
     discount: number,
     performance: number
 }
+export type User = {
+    id: string,
+    name: string
+}
