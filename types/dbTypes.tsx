@@ -24,10 +24,12 @@ export type WorkTeams = {
 
 
 export type Category = {
+    ref?: string,
     name: string
 }
 
 export type Product = {
+    ref?:string,
     category: string,
     name: string,
     brand: string,
