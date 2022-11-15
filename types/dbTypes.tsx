@@ -1,8 +1,10 @@
 export type Project = {
+    ref:string,
     name:string
 }
 
 export type EmployeeWage = {
+    ref:string,
     roleName: string,
     estimatedIncrease: number,
     transportAllowance: number,
@@ -24,13 +26,13 @@ export type WorkTeams = {
 
 
 export type Category = {
-    ref?: string,
+    ref: string,
     name: string
 }
 
 export type Product = {
-    ref?:string,
-    category: string,
+    ref:string,
+    category: Category,
     name: string,
     brand: string,
     provider: string,

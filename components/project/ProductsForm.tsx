@@ -1,21 +1,21 @@
 import { useState } from "react";
-import { Product } from "../../types/dbTypes";
+import { Category, Product } from "../../types/dbTypes";
 import Modal from "../Modal";
 import ProductsModalForm from "./ProductsModalForm";
-import { ProductsFormPropsType } from "../../types/extraTypes";
+import { CategoryFormType, ProductsFormPropsType, ProductType } from "../../types/extraTypes";
 
 
 
 const ProductsForm = (props: ProductsFormPropsType) => {
 
-    const { onFormSubmit, onFormError, productsFormUtils} = props
-    const [productModalData, setProductModalData] = useState<Product | undefined>()
+    const { onFormSubmit, onFormError, productsFormUtils, categories } = props
+    const [productModalData, setProductModalData] = useState<ProductType | undefined>()
     const [productIndex, setProductIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)    
 
-    const { fields, append, remove, update, handleSubmit, getValues, register, formId } = productsFormUtils
+    const { fields, append, remove, update, handleSubmit, getValues, register, formId, setValue } = productsFormUtils
 
-   
+ 
     return (
         <div className="w-full " >
             {
@@ -58,6 +58,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                 <tr className="">
                                     <th></th>
                                     <th></th>
+                                    <th>Categoría</th>
                                     <th>Nombre</th>
                                     <th>Marca</th>
                                     <th>Proveedor</th>
@@ -93,6 +94,21 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                     >
                                                         ❌
                                                     </button>
+                                                </th>
+                                                <th  >
+                                                   
+                                                    <select className="normal-input"
+                                                        {...register(`products.${index}.categoryIndex` as const, {
+                                                            required: true
+                                                        },
+                                                        )}
+                                                    >
+                                                        {
+                                                            (!categories || categories.length == 0)?undefined:
+                                                            categories.map((category:CategoryFormType, index:number) => 
+                                                                <option value={index} key={index} >{category.name}</option>)
+                                                        }
+                                                    </select>
                                                 </th>
                                                 <th  >
                                                
@@ -167,8 +183,8 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                         className="normal-button  my-5"
                         type="button"
                         onClick={() => {
-                            const initialValue: Product = {
-                                category: "",
+                            const initialValue: ProductType = {
+                                categoryIndex: -1,
                                 name: "",
                                 brand: "",
                                 provider: "",

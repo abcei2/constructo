@@ -151,6 +151,7 @@ const WagesForm = (props: WagesFormPropsType) => {
                         type="button"
                         onClick={() => {
                             const initialValue: EmployeeWage = {
+                                ref: "",
                                 roleName: "",
                                 estimatedIncrease: 0,
                                 transportAllowance: 0,

@@ -2,9 +2,10 @@ import { useForm } from "react-hook-form";
 import { Product } from "../../types/dbTypes";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ProductType } from "../../types/extraTypes";
 
 type ProductsModalFormType = {
-    productModalData: Product;
+    productModalData: ProductType;
     setShowModal:any;
     update:any;
     productIndex:number;
@@ -15,12 +16,12 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
     const {
         register,
         handleSubmit
-    } = useForm<Product>({
+    } = useForm<ProductType>({
         mode: "onBlur",
         defaultValues: productModalData
     });
 
-    const onSubmit = (data: Product) => {
+    const onSubmit = (data: ProductType) => {
         update(productIndex,data)
         setShowModal(false)
     }
@@ -38,7 +39,7 @@ const ProductsModalForm = (props: ProductsModalFormType) => {
                     <div  >
                         <label className="label-des">Categoria</label>
                         <input className="normal-input"
-                            {...register("category", {
+                            {...register("categoryIndex", {
                                 required: true
                             })}
                         />

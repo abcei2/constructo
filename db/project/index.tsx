@@ -1,5 +1,7 @@
 
-import { query, where, getDocs, collection, addDoc, doc, getDoc, deleteDoc, updateDoc, DocumentReference, DocumentData, CollectionReference } from "firebase/firestore";
+import { query, where, getDocs, collection, addDoc, runTransaction, doc, writeBatch, deleteDoc, updateDoc, DocumentReference, DocumentData, CollectionReference } from "firebase/firestore";
+import { type } from "os";
+import uuid from "react-uuid";
 import { Category, EmployeeWage, Product, Project } from "../../types/dbTypes";
 import db from "../firebase";
 
@@ -11,34 +13,63 @@ const WAGES_COLLECTION = "wages"
 
 const projectsCollection = collection(db, PROJECTS_COLLECTION)
 
-export const newProject = (data: Project) =>{
-    let  projectsRef: string | undefined = undefined
-    addDoc(projectsCollection, data).then(projectRefItem => projectsRef = projectRefItem.id);
-    return { projectsRef }
+export const saveProject = (
+    saveProjData:boolean, 
+    projectData: Project ,
+    categoriesData?: Array<Category>,
+    productData?:Array<Product>,
+    wagesData?:Array<EmployeeWage>    
+) =>{
+
+    if (!saveProjData && !categoriesData && !productData) 
+        return
+
+    const batch = writeBatch(db);
+
+    if (saveProjData) {
+        const { ref:pRef, ...project } = projectData
+        const pojectDoc = doc(projectsCollection, pRef)
+        batch.set(pojectDoc, project, { merge: true });
+    }
+
+    if (categoriesData)
+        categoriesData.map(
+            categoryData => {
+                const { ref, ...category } = categoryData
+                const categoryDoc = doc(projectsCollection, projectData.ref, CATEGORIES_COLLECTION, ref )
+                batch.set(categoryDoc, category, { merge:true } );
+            }
+        )
+
+    if (productData)
+        productData.map(
+            productData => {
+                const { ref, ...product } = productData
+                const productDoc = doc(projectsCollection, projectData.ref, CATEGORIES_COLLECTION, product.category.ref, PRODUCTS_COLLECTION, ref)
+                const { category, ...finalData } = product
+                batch.set(productDoc, finalData, { merge: true });
+            }
+        )
+
+    if (wagesData)
+        wagesData.map(
+            wageData => {
+                const {ref, ...wage}=wageData
+                const wageDoc = doc(projectsCollection, projectData.ref, WAGES_COLLECTION, ref)
+                batch.set(wageDoc, wage, { merge: true });
+            }
+        )
+    batch.commit();
 }
 
 
-export const newCategory = ( projectRef: string, data:Category) => {    
-    const categoriesCollection = collection(projectsCollection, projectRef, CATEGORIES_COLLECTION)
-    let categoryRef:string | undefined = undefined
-    addDoc(categoriesCollection, data).then(categoriesRefItem => categoryRef = categoriesRefItem.id)
-    return {categoryRef}
-}
 
-export const newWage = (projectRef: string, data: EmployeeWage) => {
-    const wagesCollection = collection(projectsCollection, projectRef, WAGES_COLLECTION)
-    let wagesRef: string | undefined = undefined
-    addDoc(wagesCollection, data).then(wageRefItem => wagesRef = wageRefItem.id)
-    
-    return { wagesRef }
-}
 
-export const newProduct = (projectRef: string, categoryRef: string, data:Product) => {    
-    const productsCollection = collection(projectsCollection, projectRef, CATEGORIES_COLLECTION, categoryRef, PRODUCTS_COLLECTION)
-    let productRef: string | undefined = undefined
-    addDoc(productsCollection, data).then(categoriesRefItem =>categoryRef = categoriesRefItem.id)
-    return { productRef }
-}
+
+
+
+
+
 
 export const getAllProjects = async () => {
     const q = query(projectsCollection);

@@ -4,7 +4,7 @@ import ProductsForm from "../../components/project/ProductsForm"
 const Products = () => {
     const productsFormUtils = useProductsForm()
     return (
-        <ProductsForm productsFormUtils={productsFormUtils}></ProductsForm>
+        <ProductsForm categories={[]} productsFormUtils={productsFormUtils}></ProductsForm>
     )
 }
 export default Products

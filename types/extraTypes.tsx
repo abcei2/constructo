@@ -1,4 +1,4 @@
-import { EmployeeWage, Product } from "./dbTypes"
+import { EmployeeWage } from "./dbTypes"
 
 import { 
     FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove,
@@ -29,11 +29,21 @@ export type WagesFormPropsType = {
     defaultValues?: WagesFormTypes,
 }
 
+export type ProductType= {
+    categoryIndex: number,
+    name: string,
+    brand: string,
+    provider: string,
+    price: number,
+    type: string,
+    discount: number,
+    performance: number
+}
 export type ProductsFormType = {
     concept: string,
     updateDate: Date;
     owner: string;
-    products: Array<Product>
+    products: Array<ProductType>
 }
 
 export type ProductsFormHookParams = {
@@ -47,9 +57,13 @@ export type ProductsFormHookParams = {
     setValue: UseFormSetValue<ProductsFormType>,
     getValues: UseFormGetValues<ProductsFormType>
 }
-
+export type CategoryFormType = {
+    ref?: string,
+    name: string
+}
 export type ProductsFormPropsType = {
-    productsFormUtils: ProductsFormHookParams 
+    productsFormUtils: ProductsFormHookParams ,
+    categories:Array<CategoryFormType>,
     onFormSubmit?: any,
     onFormError?: any,
     defaultValues?: ProductsFormType ,

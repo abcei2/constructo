@@ -1,4 +1,7 @@
 import { useState } from "react"
+import uuid from "react-uuid"
+import { saveProject } from "../../db/project"
+import { Product } from "../../types/dbTypes"
 import { ProductsFormType, WagesFormTypes } from "../../types/extraTypes"
 import useProductsForm from "../hooks/project/useProductsForm"
 import useWagesForm from "../hooks/project/useWagesForm"
@@ -11,6 +14,7 @@ const ProjectInitiation = () => {
     const [projectName, setProjectName] = useState<string>()
     const [categories, setCategories] = useState<Array<string>>([])
     const [currentCategory, setCurrentCategory] = useState<string>()
+    const [buttonType, setButtonType] = useState < "button" | "submit" | "reset" | undefined >("button") 
 
 
     const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos", "Crear productos"]
@@ -24,16 +28,60 @@ const ProjectInitiation = () => {
             setStepIndex(stepIndex + 1)
     }
 
-    const nextStep = () => {
+    const nextStep = (saveData: boolean) => {
+
+        stepIndex >= 2 ? setButtonType("submit") : setButtonType("button")            
+        
         switch(stepIndex){
             case 0:
-                if (projectName && projectName != "")
+                if (saveData && projectName && projectName != "")
                     indexIncrease(stepIndex)
                 break;
-            case stepNames.length - 1:
-                // to save firestore and redirect
-                // project management
-                alert("Project has to have a name")
+            case 2 :
+                if (!saveData)
+                    wagesFormUtils.setValue("employeesWage",[])
+                indexIncrease(stepIndex)
+                break;
+            case 3 :
+                console.log(productsFormUtils.getValues())
+
+                if (!saveData)
+                    productsFormUtils.setValue("products", [])
+
+                const projectData = { name: projectName ? projectName : "NO NAME", ref: uuid() }
+                const wagesData = wagesFormUtils.getValues("employeesWage").map((wage) => {
+                    return {
+                        ...wage,
+                        ref: uuid()
+                    }
+                })
+                const categoriesData = categories.map((name:string) => {                
+                        return {
+                            name,
+                            ref: uuid()
+                        }
+                })
+                const productsData:Array<Product> = []
+                productsFormUtils.getValues("products").map((productFormData) => {
+                    const { categoryIndex, ...product } = productFormData
+                    const productCategory = categoriesData[categoryIndex]  
+                    if (productCategory)                 
+                        productsData.push( {
+                            ...product,
+                            category: productCategory,
+                            ref: uuid()
+                        })
+                })
+                
+                if (productsData)
+                    saveProject(
+                        true,
+                        projectData,
+                        categoriesData, 
+                        productsData,
+                        wagesData
+                    )
+
                 break;
             default:
                 indexIncrease(stepIndex)
@@ -54,10 +102,10 @@ const ProjectInitiation = () => {
     }
 
     const removeCategory = (categoryIndex: number) => {
-        console.log(categoryIndex)
         const newCategories = categories.filter(
             (_, index: number) => index != categoryIndex            
         )
+        productsFormUtils.setValue("products",[])
         setCategories(newCategories)
     }
 
@@ -81,6 +129,7 @@ const ProjectInitiation = () => {
     const onProductsFormSubmit = (data: ProductsFormType) => {
 
         console.log(data)
+        nextStep(true)
 
     }
     
@@ -132,6 +181,7 @@ const ProjectInitiation = () => {
             case 3:
                 return <ProductsForm
                     productsFormUtils={productsFormUtils}
+                    categories={categories.map(category => {return {name:category}})}
                     onFormSubmit={onProductsFormSubmit}/>
             default:
                 return
@@ -152,15 +202,15 @@ const ProjectInitiation = () => {
                     <button onClick={prevStep} className="button-normal">Previous</button>
                     <div className="flex-auto flex flex-row-reverse">
                         <button 
-                            onClick={stepIndex < stepNames.length - 2 ? nextStep:undefined} 
+                            onClick={stepIndex < stepNames.length - 2 ? ()=>nextStep(true):undefined} 
                             className="button-primary"
-                            type={stepIndex < stepNames.length - 2?"button":"submit"}
-                            form={stepIndex == stepNames.length - 2 ? wagesFormUtils.formId :productsFormUtils.formId}
+                            type={buttonType}
+                            form={stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1?productsFormUtils.formId:""}
                         >{stepIndex < stepNames.length - 2 ? "Next" : stepIndex == stepNames.length - 2?"Save and continue":"Save and finish"}</button>
                         {
                             stepIndex==0?undefined:
-                            <button onClick={nextStep} className="button-secondary">
-                                {stepIndex < stepNames.length - 2 ? "Skip":"Skip and save"}
+                                <button onClick={() => nextStep(false)} className="button-secondary">
+                                    {stepIndex < stepNames.length - 2 ? "Skip" : stepIndex == stepNames.length - 2 ? "Skip and continue" : "Skip and finish"}
                             </button> 
                         }
                     </div>
