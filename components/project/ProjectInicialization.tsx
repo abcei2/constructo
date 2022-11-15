@@ -141,7 +141,7 @@ const ProjectInitiation = () => {
 
     return (
         <div className="p-5">
-            <Stepper stepIndex={stepIndex} setStepIndex={setStepIndex} stepNames={stepNames} />
+            <Stepper stepIndex={stepIndex}  stepNames={stepNames} />
             <div className="mt-8 p-4">
                 
                 <div>
