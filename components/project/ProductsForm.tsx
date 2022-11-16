@@ -8,7 +8,7 @@ import { CategoryFormType, ProductsFormPropsType, ProductType } from "../../type
 
 const ProductsForm = (props: ProductsFormPropsType) => {
 
-    const { onFormSubmit, onFormError, productsFormUtils, categories } = props
+    const { onFieldRemove, onFormChange, onFormSubmit, onFormError, productsFormUtils, categories } = props
     const [productModalData, setProductModalData] = useState<ProductType | undefined>()
     const [productIndex, setProductIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)    
@@ -24,7 +24,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                 </Modal>
             }
             <form 
-                className="w-full " id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)}>
+                className="w-full " id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)} onChange={onFormChange}>
                 <div className="flex justify-center m-8 text-2xl font-bold md:text-4xl ">
                     <h1>LISTA DE PRODUCTOS</h1>
                 </div>
@@ -70,7 +70,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                         </thead>
                         <tbody >
                             {
-                                fields.map((field: Product | any, index) => {
+                                fields.map((field: ProductType | any, index) => {
                                     if (field) {
 
                                         return (
@@ -89,6 +89,8 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                 <th>
                                                     <button onClick={() => {
                                                         remove(index)
+                                                        if (onFieldRemove)
+                                                            onFieldRemove(field)
                                                     }
                                                     }
                                                     >
@@ -180,7 +182,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                 </div>
                 <div className="text-right">
                     <button
-                        className="normal-button  my-5"
+                        className="button-secondary align-end  my-5"
                         type="button"
                         onClick={() => {
                             const initialValue: ProductType = {
