@@ -8,7 +8,10 @@ const useProductsForm = (defaultValues?: ProductsFormType) => {
         control,
         handleSubmit,
         setValue,
-        getValues
+        getValues,
+        getFieldState,
+        reset,
+        formState 
     } = useForm<ProductsFormType>({
         mode: "onBlur",
         defaultValues: defaultValues
@@ -19,7 +22,8 @@ const useProductsForm = (defaultValues?: ProductsFormType) => {
         control
     });
 
-    return { register, setValue, control, getValues, fields, append, remove, update, handleSubmit, formId }
+
+    return { reset, register, setValue, control, getValues, fields, append, remove, update, handleSubmit, formId, getFieldState, formState }
 }
 
 export default useProductsForm
