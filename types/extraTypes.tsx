@@ -30,6 +30,7 @@ export type WagesFormPropsType = {
 }
 
 export type ProductType= {
+    ref?:string,
     categoryIndex: number,
     name: string,
     brand: string,
@@ -40,10 +41,11 @@ export type ProductType= {
     performance: number
 }
 export type ProductsFormType = {
+    ref?:string,
     concept: string,
     updateDate: Date;
     owner: string;
-    products: Array<ProductType>
+    products: Array<ProductType | any>
 }
 
 export type ProductsFormHookParams = {
@@ -66,6 +68,8 @@ export type ProductsFormPropsType = {
     categories:Array<CategoryFormType>,
     onFormSubmit?: any,
     onFormError?: any,
+    onFormChange?:any,
+    onFieldRemove?:any,
     defaultValues?: ProductsFormType ,
 }
 
