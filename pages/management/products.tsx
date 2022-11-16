@@ -1,15 +1,16 @@
-import { deleteDoc } from "firebase/firestore"
-import { ChangeEventHandler, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import uuid from "react-uuid"
 import useProductsForm from "../../components/hooks/project/useProductsForm"
 import ProductsForm from "../../components/project/ProductsForm"
 import { deleteProduct, getAllCategories, getAllProducts, saveProject } from "../../db/project"
-import { Category, Product } from "../../types/dbTypes"
+import { Category } from "../../types/dbTypes"
 import { CategoryFormType, ProductsFormType, ProductType } from "../../types/extraTypes"
 
 const Products = () => {
     const productsFormUtils = useProductsForm()
     const projectRef = "772c131c-8d85-75f4-72be-8c5395289bc0"
+
+
     const [categories, setCategories] = useState<Array<Category>>()
     const [retrievingData, setRetrievingData] = useState<boolean>(false)
     const [dataRetrieve, setDataRetrieve] = useState<boolean>(false)
@@ -132,7 +133,6 @@ const Products = () => {
 
                         }
                     )
-
 
                     setDataRetrieve(true)
                     setRetrievingData(false)
