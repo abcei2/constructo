@@ -62,15 +62,6 @@ export const saveProject = (
     batch.commit();
 }
 
-
-
-
-
-
-
-
-
-
 export const getAllProjects = async () => {
     const q = query(projectsCollection);
     const projectSnap = await getDocs(q);
@@ -105,4 +96,9 @@ export const getAllProducts= async (projectRef: string, categoryRef:string) => {
             ref: doc.id
         }
     });
+}
+
+export const deleteProduct = async (projectRef: string, categoryRef: string, productRef:string) =>{
+
+    await deleteDoc(doc(projectsCollection, projectRef, CATEGORIES_COLLECTION,categoryRef,PRODUCTS_COLLECTION,productRef));
 }
