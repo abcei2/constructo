@@ -24,6 +24,7 @@ export type WagesFormHookParams = {
 
 export type WagesFormPropsType = {
     wagesFormUtils: WagesFormHookParams
+    onFieldRemove?: any,
     onFormSubmit?: any,
     onFormError?: any,
     defaultValues?: WagesFormTypes,

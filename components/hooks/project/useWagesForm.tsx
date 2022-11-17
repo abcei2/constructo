@@ -8,7 +8,9 @@ const useWagesForm = (defaultValues?:WagesFormTypes) =>{
         control,
         handleSubmit,
         getValues,
-        setValue
+        setValue,
+        reset,
+        formState
     } = useForm<WagesFormTypes>({
         mode: "onBlur",
         defaultValues:defaultValues
@@ -19,7 +21,7 @@ const useWagesForm = (defaultValues?:WagesFormTypes) =>{
         control
     });
 
-    return { register, setValue, control, getValues, fields, append, remove, update, handleSubmit, formId }
+    return { reset, register, setValue, control, getValues, fields, append, remove, update, handleSubmit, formId, formState }
 }
 
  export default useWagesForm

@@ -21,7 +21,7 @@ export const saveProject = (
     wagesData?:Array<EmployeeWage>    
 ) =>{
 
-    if (!saveProjData && !categoriesData && !productData) 
+    if (!saveProjData && !categoriesData && !productData && !wagesData) 
         return
 
     const batch = writeBatch(db);
@@ -84,6 +84,17 @@ export const getAllCategories = async (projectRef: string) => {
         }
     } );
 }
+export const getAllWages= async (projectRef: string) => {
+    const wagesCollection = collection(projectsCollection, projectRef, WAGES_COLLECTION)
+    const q = query(wagesCollection);
+    const wagesSnap = await getDocs(q);
+    return wagesSnap.docs.map((doc) => {
+        return {
+            ...doc.data(),
+            ref: doc.id
+        }
+    });
+}
 
 export const getAllProducts= async (projectRef: string, categoryRef:string) => {
     const productsCollection = collection(projectsCollection, projectRef, CATEGORIES_COLLECTION, categoryRef, PRODUCTS_COLLECTION)
@@ -101,4 +112,9 @@ export const getAllProducts= async (projectRef: string, categoryRef:string) => {
 export const deleteProduct = async (projectRef: string, categoryRef: string, productRef:string) =>{
 
     await deleteDoc(doc(projectsCollection, projectRef, CATEGORIES_COLLECTION,categoryRef,PRODUCTS_COLLECTION,productRef));
+}
+
+export const deleteWage = async (projectRef: string, wageRef: string) => {
+
+    await deleteDoc(doc(projectsCollection, projectRef, WAGES_COLLECTION, wageRef));
 }

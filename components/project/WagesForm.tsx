@@ -7,7 +7,7 @@ import { WagesFormPropsType } from "../../types/extraTypes";
 
 const WagesForm = (props: WagesFormPropsType) => {
 
-    const { onFormSubmit, onFormError, wagesFormUtils }= props
+    const { onFormSubmit, onFormError, wagesFormUtils, onFieldRemove }= props
     const [wageModalData, setWageModalData] = useState<EmployeeWage | undefined>()
     const [wageIndex, setWageIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)
@@ -70,7 +70,10 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                 </th>
                                                 <th>
                                                     <button type="button"  onClick={() => {
+                                                        
                                                         remove(index)
+                                                        if (onFieldRemove)
+                                                            onFieldRemove(field)
                                                     }
                                                     }
                                                     >
@@ -147,7 +150,7 @@ const WagesForm = (props: WagesFormPropsType) => {
                 <div className="flex justify-end  py-5">
                   
                     <button
-                        className="button-secondary "
+                        className="button-secondary align-end  my-5"
                         type="button"
                         onClick={() => {
                             const initialValue: EmployeeWage = {
