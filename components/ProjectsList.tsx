@@ -9,7 +9,7 @@ const ProjectsList = () => {
 
     const { user } = useAuth();
     const router = useRouter();
-    const [projects, setProjects] = useState<any>();
+    const [projects, setProjects] = useState<Array<any>>([]);
     
     useEffect(() => {
         getAllProjects().then(
@@ -28,10 +28,10 @@ const ProjectsList = () => {
                         onClick={() => router.replace({pathname: '/create'})}>Crear proyecto</button>
                 </div>
             </div>
-            <div className="overflow-auto ">
+            <div className="overflow-auto  ">
 
                 {
-                    projects ? projects.map(
+                    projects.length>0 ? projects.map(
                         (project: Project | any, index: number) => {
                             return <div key={index} onClick={() => router.replace({
                                 pathname: '/management',
@@ -52,7 +52,11 @@ const ProjectsList = () => {
                                 </div>
                             </div>
                         }
-                    ) : <div>Aún no has creado un proyecto</div>
+                    ) : <div className="  h-screen items-center flex  ">
+                            <div className="text-center w-full md:text-4xl text-3xl">
+                                Aún no has creado un proyecto
+                            </div>
+                    </div>
                 }
             </div>
           
