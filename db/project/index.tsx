@@ -1,8 +1,7 @@
 
-import { query, where, getDocs, collection, addDoc, runTransaction, doc, writeBatch, deleteDoc, updateDoc, DocumentReference, DocumentData, CollectionReference } from "firebase/firestore";
-import { type } from "os";
-import uuid from "react-uuid";
-import { Category, EmployeeWage, Product, Project } from "../../types/dbTypes";
+import { query,  getDocs, collection, doc, writeBatch, deleteDoc, getDoc } from "firebase/firestore";
+
+import { Category, EmployeeWage, ProdsProviders, Product, Project } from "../../types/dbTypes";
 import db from "../firebase";
 
 const PROJECTS_COLLECTION = "projects"
@@ -18,6 +17,7 @@ export const saveProject = (
     projectOwner:string,
     projectData?: Project ,
     categoriesData?: Array<Category>,
+    productsProvidersData?: ProdsProviders,
     productData?:Array<Product>,
     wagesData?:Array<EmployeeWage>
 ) =>{
@@ -27,13 +27,20 @@ export const saveProject = (
 
     const batch = writeBatch(db);
     const pojectDoc = doc(projectsCollection, projectRef)
-
+    
     if (projectData) {
-        batch.set(pojectDoc, {
+        const newProjectData = productsProvidersData?
+        {
             ...projectData,
-            owner:projectOwner
-        }, { merge: true });
+            ...productsProvidersData,
+            owner: projectOwner
+        } : {
+            ...projectData,
+            owner: projectOwner
+        }
+        batch.set(pojectDoc, newProjectData, { merge: true });
     }
+ 
 
     if (categoriesData)
         categoriesData.map(
@@ -75,7 +82,13 @@ export const getAllProjects = async () => {
         }
     });
 }
-
+export const getProjectData= async (projectRef: string) => {
+    const projectDoc = doc(projectsCollection, projectRef)
+    const categoriesSnap = await getDoc(projectDoc);
+    return {
+        ...categoriesSnap.data()
+    }
+}
 export const getAllCategories = async (projectRef: string) => {
     const categoriesCollection = collection(projectsCollection, projectRef, CATEGORIES_COLLECTION)
     const q = query(categoriesCollection);
