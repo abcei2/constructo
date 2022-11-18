@@ -2,14 +2,15 @@ import { useEffect, useState } from "react"
 import uuid from "react-uuid"
 import useProductsForm from "../../components/hooks/project/useProductsForm"
 import ProductsForm from "../../components/project/ProductsForm"
+import { useAuth } from "../../context/AuthContext"
 import { deleteProduct, getAllCategories, getAllProducts, saveProject } from "../../db/project"
 import { Category } from "../../types/dbTypes"
 import { CategoryFormType, ProductsFormType, ProductType } from "../../types/extraTypes"
 
 const Products = () => {
+    const {user} = useAuth();
     const productsFormUtils = useProductsForm()
-    const projectRef = "772c131c-8d85-75f4-72be-8c5395289bc0"
-
+    const projectRef = "abfa6438-d48b-3ee8-319d-8d6699b31929"
 
     const [categories, setCategories] = useState<Array<Category>>()
     const [retrievingData, setRetrievingData] = useState<boolean>(false)
@@ -28,7 +29,7 @@ const Products = () => {
     }
 
     const onProductsFormSubmit = (data: ProductsFormType |any) => {
-        if (!dataRetrieve || !categories)
+        if (!dataRetrieve || !categories || !user)
             return
 
         if (dirtyFields.concept){
@@ -88,9 +89,8 @@ const Products = () => {
                 (updatedFields: any) => updatedFields
             )
 
-            saveProject(false, {
-                name: "",
-                ref: projectRef
+            saveProject(projectRef,user.email,{
+                name: ""
             }, undefined, productsToUpdate)
         }       
     
@@ -101,7 +101,7 @@ const Products = () => {
     }
 
     useEffect(() => {
-        if (!retrievingData && !dataRetrieve){
+        if (user && !retrievingData && !dataRetrieve){
             setRetrievingData(true)
             getAllCategories(projectRef).then(
                 (dbCategories: any) => {
@@ -140,7 +140,7 @@ const Products = () => {
             )
         }
         
-    }, [dataRetrieve, productsFormUtils, retrievingData])
+    }, [dataRetrieve, productsFormUtils, retrievingData, user])
 
 
     return (<>

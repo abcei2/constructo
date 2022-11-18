@@ -2,13 +2,15 @@ import { useEffect, useState } from "react"
 import uuid from "react-uuid"
 import useWagesForm from "../../components/hooks/project/useWagesForm"
 import WagesForm from "../../components/project/WagesForm"
+import { useAuth } from "../../context/AuthContext"
 import { deleteWage, getAllWages, saveProject } from "../../db/project"
 import { EmployeeWage } from "../../types/dbTypes"
 import { WagesFormTypes } from "../../types/extraTypes"
 
 const Wages = () => {
     const wagesFormUtils = useWagesForm()
-    const projectRef = "de244ff5-a88e-d41d-b0d7-5a6c50352e25"
+    const { user } = useAuth()
+    const projectRef = "abfa6438-d48b-3ee8-319d-8d6699b31929"
 
 
     const [retrievingData, setRetrievingData] = useState<boolean>(false)
@@ -21,7 +23,7 @@ const Wages = () => {
     }
 
     const onWagesFormSubmit = (data: WagesFormTypes |any) => {
-        if (!dataRetrieve )
+        if (!dataRetrieve || !user )
             return
 
         if (dirtyFields.employeesWage) {
@@ -72,9 +74,8 @@ const Wages = () => {
 
 
             console.log(wagesFormUtils.getValues(), data)
-            saveProject(false, {
-                name: "",
-                ref: projectRef
+            saveProject(projectRef, user.email, {
+                name: ""
             }, undefined, undefined, wagesToUpdate)
         }
         wagesFormUtils.reset(wagesFormUtils.getValues(), {
@@ -84,7 +85,7 @@ const Wages = () => {
     }
 
     useEffect(() => {
-        if (!retrievingData && !dataRetrieve) {
+        if (user && !retrievingData && !dataRetrieve) {
             setRetrievingData(true)
             getAllWages(projectRef).then(
                 (dbWages) =>{
@@ -106,7 +107,7 @@ const Wages = () => {
             
         }
 
-    }, [dataRetrieve, wagesFormUtils, retrievingData])
+    }, [dataRetrieve, wagesFormUtils, retrievingData, user])
 
     return (<div className="flex flex-col">
         <WagesForm onFieldRemove={onFieldRemove} onFormSubmit={onWagesFormSubmit} wagesFormUtils={wagesFormUtils}></WagesForm>

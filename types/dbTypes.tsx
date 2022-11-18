@@ -1,6 +1,5 @@
 export type Project = {
-    ref:string,
-    name:string
+    name: string
 }
 
 export type EmployeeWage = {
@@ -43,5 +42,6 @@ export type Product = {
 }
 export type User = {
     id: string,
-    name: string
+    name: string,
+    email: string,
 }

@@ -38,7 +38,7 @@ export function AuthProvider({ children }: Props) {
         if(user && !userInfo){
             setUser(undefined);
         }else if(!user && userInfo){
-            setUser({id:userInfo.uid,name:userInfo.displayName?userInfo.displayName:""});
+            setUser({id:userInfo.uid,name:userInfo.displayName?userInfo.displayName:"",email:userInfo.email || ""});
         }
     })
     const login = () => {

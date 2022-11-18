@@ -14,29 +14,32 @@ const WAGES_COLLECTION = "wages"
 const projectsCollection = collection(db, PROJECTS_COLLECTION)
 
 export const saveProject = (
-    saveProjData:boolean, 
-    projectData: Project ,
+    projectRef:string,
+    projectOwner:string,
+    projectData?: Project ,
     categoriesData?: Array<Category>,
     productData?:Array<Product>,
-    wagesData?:Array<EmployeeWage>    
+    wagesData?:Array<EmployeeWage>
 ) =>{
 
-    if (!saveProjData && !categoriesData && !productData && !wagesData) 
+    if (!projectRef  || !projectData && !categoriesData && !productData && !wagesData) 
         return
 
     const batch = writeBatch(db);
+    const pojectDoc = doc(projectsCollection, projectRef)
 
-    if (saveProjData) {
-        const { ref:pRef, ...project } = projectData
-        const pojectDoc = doc(projectsCollection, pRef)
-        batch.set(pojectDoc, project, { merge: true });
+    if (projectData) {
+        batch.set(pojectDoc, {
+            ...projectData,
+            owner:projectOwner
+        }, { merge: true });
     }
 
     if (categoriesData)
         categoriesData.map(
             categoryData => {
                 const { ref, ...category } = categoryData
-                const categoryDoc = doc(projectsCollection, projectData.ref, CATEGORIES_COLLECTION, ref )
+                const categoryDoc = doc(projectsCollection, projectRef, CATEGORIES_COLLECTION, ref )
                 batch.set(categoryDoc, category, { merge:true } );
             }
         )
@@ -45,7 +48,7 @@ export const saveProject = (
         productData.map(
             productData => {
                 const { ref, ...product } = productData
-                const productDoc = doc(projectsCollection, projectData.ref, CATEGORIES_COLLECTION, product.category.ref, PRODUCTS_COLLECTION, ref)
+                const productDoc = doc(projectsCollection, projectRef, CATEGORIES_COLLECTION, product.category.ref, PRODUCTS_COLLECTION, ref)
                 const { category, ...finalData } = product
                 batch.set(productDoc, finalData, { merge: true });
             }
@@ -55,7 +58,7 @@ export const saveProject = (
         wagesData.map(
             wageData => {
                 const {ref, ...wage}=wageData
-                const wageDoc = doc(projectsCollection, projectData.ref, WAGES_COLLECTION, ref)
+                const wageDoc = doc(projectsCollection, projectRef, WAGES_COLLECTION, ref)
                 batch.set(wageDoc, wage, { merge: true });
             }
         )

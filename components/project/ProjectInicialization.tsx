@@ -1,5 +1,7 @@
-import { useState } from "react"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 import uuid from "react-uuid"
+import { useAuth } from "../../context/AuthContext"
 import { saveProject } from "../../db/project"
 import { Product } from "../../types/dbTypes"
 import { ProductsFormType, WagesFormTypes } from "../../types/extraTypes"
@@ -10,6 +12,9 @@ import ProductsForm from "./ProductsForm"
 import WagesForm from "./WagesForm"
 
 const ProjectInitiation = () => {
+
+    const { user } = useAuth();
+    const router = useRouter();
 
     const [projectName, setProjectName] = useState<string>()
     const [categories, setCategories] = useState<Array<string>>([])
@@ -23,13 +28,15 @@ const ProjectInitiation = () => {
     const wagesFormUtils = useWagesForm()
     const productsFormUtils = useProductsForm()
 
+
+
     const indexIncrease = (stepIndex:number) => {
         if (stepIndex < stepNames.length - 1)
             setStepIndex(stepIndex + 1)
     }
 
     const nextStep = (saveData: boolean) => {
-
+        
         stepIndex >= 2 ? setButtonType("submit") : setButtonType("button")            
         
         switch(stepIndex){
@@ -48,7 +55,8 @@ const ProjectInitiation = () => {
                 if (!saveData)
                     productsFormUtils.setValue("products", [])
 
-                const projectData = { name: projectName ? projectName : "NO NAME", ref: uuid() }
+                const projectData = { name: projectName ? projectName : "NO NAME"}
+
                 const wagesData = wagesFormUtils.getValues("employeesWage").map((wage) => {
                     return {
                         ...wage,
@@ -75,7 +83,8 @@ const ProjectInitiation = () => {
                 
                 if (productsData)
                     saveProject(
-                        true,
+                        uuid(),
+                        user?.email?user.email:"",
                         projectData,
                         categoriesData, 
                         productsData,
@@ -189,35 +198,37 @@ const ProjectInitiation = () => {
         }
     }
 
-    return (
-        <div className="p-5">
-            <Stepper stepIndex={stepIndex}  stepNames={stepNames} />
-            <div className="mt-8 p-4">
-                
-                <div>
-                    {whichStepContainer()}
-                </div>
+    return <>
+        {
+            user && <div className="p-5">
+                <Stepper stepIndex={stepIndex}  stepNames={stepNames} />
+                <div className="mt-8 p-4">
+                    
+                    <div>
+                        {whichStepContainer()}
+                    </div>
 
-                <div className="flex p-2 mt-4">
-                    <button onClick={prevStep} className="button-normal">Previous</button>
-                    <div className="flex-auto flex flex-row-reverse">
-                        <button 
-                            onClick={stepIndex < stepNames.length - 2 ? ()=>nextStep(true):undefined} 
-                            className="button-primary"
-                            type={buttonType}
-                            form={stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1?productsFormUtils.formId:""}
-                        >{stepIndex < stepNames.length - 2 ? "Next" : stepIndex == stepNames.length - 2?"Save and continue":"Save and finish"}</button>
-                        {
-                            stepIndex==0?undefined:
-                                <button onClick={() => nextStep(false)} className="button-secondary">
-                                    {stepIndex < stepNames.length - 2 ? "Skip" : stepIndex == stepNames.length - 2 ? "Skip and continue" : "Skip and finish"}
-                            </button> 
-                        }
+                    <div className="flex p-2 mt-4">
+                        <button onClick={prevStep} className="button-normal">Previous</button>
+                        <div className="flex-auto flex flex-row-reverse">
+                            <button
+                                onClick={stepIndex < stepNames.length - 2 ? ()=>nextStep(true):undefined}
+                                className="button-primary"
+                                type={buttonType}
+                                form={stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1?productsFormUtils.formId:""}
+                            >{stepIndex < stepNames.length - 2 ? "Next" : stepIndex == stepNames.length - 2?"Save and continue":"Save and finish"}</button>
+                            {
+                                stepIndex==0?undefined:
+                                    <button onClick={() => nextStep(false)} className="button-secondary">
+                                        {stepIndex < stepNames.length - 2 ? "Skip" : stepIndex == stepNames.length - 2 ? "Skip and continue" : "Skip and finish"}
+                                </button> 
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        }        
+    </>
 
 }
 export default ProjectInitiation
