@@ -4,7 +4,7 @@ import uuid from "react-uuid"
 import useProductsForm from "../../components/hooks/project/useProductsForm"
 import ProductsForm from "../../components/project/ProductsForm"
 import { useAuth } from "../../context/AuthContext"
-import { deleteProduct, getAllCategories, getAllProducts, saveProject } from "../../db/project"
+import { deleteProduct, getAllCategories, getAllProducts, getProjectData, saveProject } from "../../db/project"
 import { Category } from "../../types/dbTypes"
 import { CategoryFormType, ProductsFormType, ProductType } from "../../types/extraTypes"
 
@@ -33,15 +33,17 @@ const Products = () => {
     const onProductsFormSubmit = (data: ProductsFormType |any) => {
         if (!dataRetrieve || !categories || !user)
             return
-
-        if (dirtyFields.concept){
-
+        let newProductsProvidersData = undefined
+        if (dirtyFields.concept || dirtyFields.manager || !dirtyFields.updateDate){
+            newProductsProvidersData = {
+                concept: data.concept,
+                manager: data.manager,
+                updateDate: data.updateDate
+            }
         }
-        if(dirtyFields.owner){
-            
-        }
+        let productsToUpdate = undefined
         if(dirtyFields.products){
-            const productsToUpdate = data.products.map(
+            productsToUpdate = data.products.map(
                 (productWithCategory: ProductType, productIndex: number) => {
                     const { categoryIndex, ...product } = productWithCategory
                       
@@ -91,11 +93,12 @@ const Products = () => {
                 (updatedFields: any) => updatedFields
             )
 
-            saveProject(projectRef,user.email,{
-                name: ""
-            }, undefined, productsToUpdate)
         }       
-    
+
+        saveProject(projectRef, user.email, {
+            name: ""
+        }, undefined, newProductsProvidersData, productsToUpdate)
+
         productsFormUtils.reset(productsFormUtils.getValues(), {
             keepDirty: false,
             keepDirtyValues: false
@@ -113,6 +116,13 @@ const Products = () => {
     useEffect(() => {
         if (user && !retrievingData && !dataRetrieve && projectRef){
             setRetrievingData(true)
+            getProjectData(projectRef).then(
+                (projectData: any) => {
+                    productsFormUtils.setValue("concept", projectData.concept)
+                    productsFormUtils.setValue("manager", projectData.manager)
+                    productsFormUtils.setValue("updateDate", projectData.updateDate)
+                }
+            )
             getAllCategories(projectRef).then(
                 (dbCategories: any) => {
 

@@ -45,7 +45,7 @@ export type ProductsFormType = {
     ref?:string,
     concept: string,
     updateDate: Date;
-    owner: string;
+    manager: string;
     products: Array<ProductType | any>
 }
 

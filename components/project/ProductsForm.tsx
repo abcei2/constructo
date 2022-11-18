@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Category, Product } from "../../types/dbTypes";
 import Modal from "../Modal";
 import ProductsModalForm from "./ProductsModalForm";
 import { CategoryFormType, ProductsFormPropsType, ProductType } from "../../types/extraTypes";
@@ -13,7 +12,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
     const [productIndex, setProductIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)    
 
-    const { fields, append, remove, update, handleSubmit, getValues, register, formId, setValue } = productsFormUtils
+    const { fields, append, remove, update, handleSubmit, getValues, register, formId } = productsFormUtils
 
  
     return (
@@ -38,11 +37,11 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                         </div>
                         <div>
                             <label className="font-medium text-xs md:text-lg">Fecha Actualizacion:</label>
-                            <input type="date" className="normal-input m-4 w-44" {...register("concept", { required: true })} />
+                            <input type="date" className="normal-input m-4 w-44" {...register("updateDate", { required: true })} />
                         </div>
                         <div>
                             <label className="font-medium text-xs md:text-lg ">Elaborado Por:</label>
-                            <input className="normal-input m-4 w-44 " {...register("concept", { required: true })} />
+                            <input className="normal-input m-4 w-44 " {...register("manager", { required: true })} />
                         </div>
                     </div>
                 </div>

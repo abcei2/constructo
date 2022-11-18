@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import uuid from "react-uuid"
 import { useAuth } from "../../context/AuthContext"
 import { saveProject } from "../../db/project"
-import { Product } from "../../types/dbTypes"
+import { ProdsProviders, Product } from "../../types/dbTypes"
 import { ProductsFormType, WagesFormTypes } from "../../types/extraTypes"
 import useProductsForm from "../hooks/project/useProductsForm"
 import useWagesForm from "../hooks/project/useWagesForm"
@@ -73,6 +73,13 @@ const ProjectInitiation = () => {
                             ref: uuid()
                         }
                 })
+
+                const prodsProviders:ProdsProviders= {
+                    concept:productsFormUtils.getValues("concept"),
+                    manager: productsFormUtils.getValues("manager"),
+                    updateDate: productsFormUtils.getValues("updateDate"),
+                }
+                
                 const productsData:Array<Product> = []
                 productsFormUtils.getValues("products").map((productFormData) => {
                     const { categoryIndex, ...product } = productFormData
@@ -90,6 +97,7 @@ const ProjectInitiation = () => {
                     user?.email?user.email:"",
                     projectData,
                     categoriesData, 
+                    prodsProviders,
                     productsData,
                     wagesData
                 )

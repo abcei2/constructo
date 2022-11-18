@@ -22,7 +22,12 @@ export type WorkTeams = {
     team: Array<EmployeeAmount>,
     totalWage: number
 }
-
+export type ProdsProviders = {
+    ref?: string,
+    concept: string,
+    manager: string;
+    updateDate: Date;
+}
 
 export type Category = {
     ref: string,
