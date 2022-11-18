@@ -203,7 +203,8 @@ const ProjectInitiation = () => {
     return <>
         {
             user && <div className="p-5">
-                <Stepper stepIndex={stepIndex}  stepNames={stepNames} />
+
+                <Stepper stepIndex={stepIndex} stepNames={stepNames} />
                 <div className="mt-8 p-4">
                     
                     <div>
@@ -211,6 +212,8 @@ const ProjectInitiation = () => {
                     </div>
 
                     <div className="flex p-2 mt-4">
+
+                        <button onClick={() => router.replace("/")} className="mr-5 button-secondary">volver</button>
                         <button onClick={prevStep} className="button-normal">Previous</button>
                         <div className="flex-auto flex flex-row-reverse">
                             <button

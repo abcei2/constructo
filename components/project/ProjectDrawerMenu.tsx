@@ -22,7 +22,6 @@ const ProjectDrawerMenu = (props: {
                 })
                 break;
             default:
-                router.replace("/management")
                 router.replace({
                     pathname: '/management',
                     query: { projectRef }
@@ -32,11 +31,11 @@ const ProjectDrawerMenu = (props: {
     }
   
     useEffect(()=>{
-        if (!router.query.projectRef)
-            router.replace("/create")
+        if (!router.query.projectRef && !projectRef)
+            router.replace("/")
         else
             setProjectRef(router.query.projectRef)
-    },[router])
+    }, [router, projectRef])
     
     return (
         <div className="w-full text-gray-900 bg-white  ">
