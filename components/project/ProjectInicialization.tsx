@@ -17,6 +17,7 @@ const ProjectInitiation = () => {
     const router = useRouter();
 
     const [projectName, setProjectName] = useState<string>()
+    
     const [categories, setCategories] = useState<Array<string>>([])
     const [currentCategory, setCurrentCategory] = useState<string>()
     const [buttonType, setButtonType] = useState < "button" | "submit" | "reset" | undefined >("button") 
@@ -29,15 +30,18 @@ const ProjectInitiation = () => {
     const productsFormUtils = useProductsForm()
 
 
-
+    useEffect(
+        ()=>stepIndex >= 2 ? setButtonType("submit") : setButtonType("button")      
+    , [stepIndex])
+    
     const indexIncrease = (stepIndex:number) => {
         if (stepIndex < stepNames.length - 1)
             setStepIndex(stepIndex + 1)
     }
+    
 
     const nextStep = (saveData: boolean) => {
-        
-        stepIndex >= 2 ? setButtonType("submit") : setButtonType("button")            
+              
         
         switch(stepIndex){
             case 0:
@@ -107,8 +111,10 @@ const ProjectInitiation = () => {
 
     const addCategory = () => {
         if (currentCategory){
-            if (!categories.includes(currentCategory))
+            if (!categories.includes(currentCategory)){
+                setCurrentCategory("")
                 setCategories(oldCategories => [...oldCategories, currentCategory])
+            }
         }
     }
 
@@ -205,6 +211,8 @@ const ProjectInitiation = () => {
             user && <div className="p-5">
 
                 <Stepper stepIndex={stepIndex} stepNames={stepNames} />
+                {stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1 ? productsFormUtils.formId : ""}
+                {buttonType}
                 <div className="mt-8 p-4">
                     
                     <div>
