@@ -114,9 +114,9 @@ const Wages = () => {
         if (router.query.projectRef)
             setProjectRef(router.query.projectRef)
         else
-            router.replace("/create")
+            router.replace("/")
     },[router])
-    
+
     return (<div className="flex flex-col">
         <WagesForm onFieldRemove={onFieldRemove} onFormSubmit={onWagesFormSubmit} wagesFormUtils={wagesFormUtils}></WagesForm>
         <button

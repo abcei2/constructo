@@ -107,7 +107,7 @@ const Products = () => {
         if (router.query.projectRef)
             setProjectRef(router.query.projectRef)
         else
-            router.replace("/create")
+            router.replace("/")
     }, [router])
 
     useEffect(() => {
