@@ -1,25 +1,43 @@
 import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 
 const ProjectDrawerMenu = (props: {
     menuItemNames: Array<string>
 }) => {
     const { menuItemNames } = props
+    const [projectRef, setProjectRef] = useState<string|any>()
     const router = useRouter()
     const onItemClick = (currentItemIndex:number) => {
         switch (currentItemIndex) {
             case 0:
-                router.replace("/management/wages")
+                router.replace({
+                    pathname: '/management/wages',
+                    query: { projectRef }
+                })
                 break;
             case 1:
-                router.replace("/management/products")
+                router.replace({
+                    pathname: '/management/products',
+                    query: { projectRef }
+                })
                 break;
             default:
                 router.replace("/management")
+                router.replace({
+                    pathname: '/management',
+                    query: { projectRef }
+                })
                 break;
         }
     }
   
-
+    useEffect(()=>{
+        if (!router.query.projectRef)
+            router.replace("/create")
+        else
+            setProjectRef(router.query.projectRef)
+    },[router])
+    
     return (
         <div className="w-full text-gray-900 bg-white  ">
             {

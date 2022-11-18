@@ -80,17 +80,19 @@ const ProjectInitiation = () => {
                             ref: uuid()
                         })
                 })
-                
-                if (productsData)
-                    saveProject(
-                        uuid(),
-                        user?.email?user.email:"",
-                        projectData,
-                        categoriesData, 
-                        productsData,
-                        wagesData
-                    )
-
+                const newProjectRef = uuid()
+                saveProject(
+                    newProjectRef,
+                    user?.email?user.email:"",
+                    projectData,
+                    categoriesData, 
+                    productsData,
+                    wagesData
+                )
+                router.replace( {
+                    pathname: '/management',
+                    query: { projectRef: newProjectRef }
+                })
                 break;
             default:
                 indexIncrease(stepIndex)

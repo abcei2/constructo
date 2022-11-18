@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import uuid from "react-uuid"
 import useWagesForm from "../../components/hooks/project/useWagesForm"
@@ -9,8 +10,10 @@ import { WagesFormTypes } from "../../types/extraTypes"
 
 const Wages = () => {
     const wagesFormUtils = useWagesForm()
+
     const { user } = useAuth()
-    const projectRef = "abfa6438-d48b-3ee8-319d-8d6699b31929"
+    const router = useRouter()
+    const [projectRef, setProjectRef] = useState<string | any>()
 
 
     const [retrievingData, setRetrievingData] = useState<boolean>(false)
@@ -19,11 +22,12 @@ const Wages = () => {
     const { dirtyFields } = wagesFormUtils.formState
 
     const onFieldRemove = (wageField: EmployeeWage) => {
-        deleteWage(projectRef,wageField.ref)
+        if(projectRef)
+            deleteWage(projectRef,wageField.ref)
     }
 
     const onWagesFormSubmit = (data: WagesFormTypes |any) => {
-        if (!dataRetrieve || !user )
+        if (!dataRetrieve || !user || !projectRef)
             return
 
         if (dirtyFields.employeesWage) {
@@ -72,11 +76,7 @@ const Wages = () => {
                 (updatedFields: any) => updatedFields
             )
 
-
-            console.log(wagesFormUtils.getValues(), data)
-            saveProject(projectRef, user.email, {
-                name: ""
-            }, undefined, undefined, wagesToUpdate)
+            saveProject(projectRef, user.email, undefined, undefined, undefined, wagesToUpdate)
         }
         wagesFormUtils.reset(wagesFormUtils.getValues(), {
             keepDirty: false,
@@ -85,13 +85,14 @@ const Wages = () => {
     }
 
     useEffect(() => {
-        if (user && !retrievingData && !dataRetrieve) {
+        
+        if (user && !retrievingData && !dataRetrieve && projectRef) {
             setRetrievingData(true)
             getAllWages(projectRef).then(
                 (dbWages) =>{
                     console.log(dbWages)
                     dbWages.forEach(
-                        (dbWage: EmployeeWage|any, wageIndex: number) => {
+                        (dbWage: EmployeeWage|any) => {
                             console.log(dbWage)
                             wagesFormUtils.append({
                                 ...dbWage
@@ -107,8 +108,15 @@ const Wages = () => {
             
         }
 
-    }, [dataRetrieve, wagesFormUtils, retrievingData, user])
+    }, [dataRetrieve, wagesFormUtils, retrievingData, user, projectRef])
 
+    useEffect(()=>{
+        if (router.query.projectRef)
+            setProjectRef(router.query.projectRef)
+        else
+            router.replace("/create")
+    },[router])
+    
     return (<div className="flex flex-col">
         <WagesForm onFieldRemove={onFieldRemove} onFormSubmit={onWagesFormSubmit} wagesFormUtils={wagesFormUtils}></WagesForm>
         <button

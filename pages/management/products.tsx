@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import uuid from "react-uuid"
 import useProductsForm from "../../components/hooks/project/useProductsForm"
@@ -8,9 +9,10 @@ import { Category } from "../../types/dbTypes"
 import { CategoryFormType, ProductsFormType, ProductType } from "../../types/extraTypes"
 
 const Products = () => {
-    const {user} = useAuth();
     const productsFormUtils = useProductsForm()
-    const projectRef = "abfa6438-d48b-3ee8-319d-8d6699b31929"
+    const { user } = useAuth()
+    const router = useRouter()
+    const [projectRef, setProjectRef] = useState<string | any>()
 
     const [categories, setCategories] = useState<Array<Category>>()
     const [retrievingData, setRetrievingData] = useState<boolean>(false)
@@ -19,7 +21,7 @@ const Products = () => {
     const { dirtyFields } =  productsFormUtils.formState
   
     const onFieldRemove = (productField:ProductType)=> {
-        if (categories) {
+        if (categories && projectRef) {
             const { categoryIndex, ...productToRemove } = productField
             if (productToRemove.ref){
                 const category = categories[categoryIndex]
@@ -101,7 +103,15 @@ const Products = () => {
     }
 
     useEffect(() => {
-        if (user && !retrievingData && !dataRetrieve){
+        console.log(router.query.projectRef)
+        if (router.query.projectRef)
+            setProjectRef(router.query.projectRef)
+        else
+            router.replace("/create")
+    }, [router])
+
+    useEffect(() => {
+        if (user && !retrievingData && !dataRetrieve && projectRef){
             setRetrievingData(true)
             getAllCategories(projectRef).then(
                 (dbCategories: any) => {
@@ -140,7 +150,7 @@ const Products = () => {
             )
         }
         
-    }, [dataRetrieve, productsFormUtils, retrievingData, user])
+    }, [dataRetrieve, productsFormUtils, retrievingData, user, projectRef])
 
 
     return (<>
