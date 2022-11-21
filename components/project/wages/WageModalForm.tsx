@@ -1,5 +1,5 @@
-import { useFieldArray, useForm } from "react-hook-form";
-import { EmployeeWage } from "../../types/dbTypes";
+import { useForm } from "react-hook-form";
+import { EmployeeWage } from "../../../types/dbTypes";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

@@ -8,8 +8,8 @@ import { ProductsFormType, WagesFormTypes } from "../../types/extraTypes"
 import useProductsForm from "../hooks/project/useProductsForm"
 import useWagesForm from "../hooks/project/useWagesForm"
 import Stepper from "../Stepper"
-import ProductsForm from "./ProductsForm"
-import WagesForm from "./WagesForm"
+import ProductsForm from "./prodsProviders/ProductsForm"
+import WagesForm from "./wages/WagesForm"
 
 const ProjectInitiation = () => {
 

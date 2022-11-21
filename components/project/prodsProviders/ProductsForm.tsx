@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Modal from "../Modal";
+import Modal from "../../Modal";
 import ProductsModalForm from "./ProductsModalForm";
-import { CategoryFormType, ProductsFormPropsType, ProductType } from "../../types/extraTypes";
+import { CategoryFormType, ProductsFormPropsType, ProductType } from "../../../types/extraTypes";
 
 
 
