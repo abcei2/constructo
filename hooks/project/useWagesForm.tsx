@@ -1,5 +1,5 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import { WagesFormTypes } from "../../../types/extraTypes";
+import { WagesFormTypes } from "../../types/extraTypes";
 
 const useWagesForm = (defaultValues?:WagesFormTypes) =>{
     const formId = "employeesWage"

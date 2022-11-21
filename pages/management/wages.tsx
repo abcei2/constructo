@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import uuid from "react-uuid"
-import useWagesForm from "../../components/hooks/project/useWagesForm"
+import useWagesForm from "../../hooks/project/useWagesForm"
 import WagesForm from "../../components/project/wages/WagesForm"
 import { useAuth } from "../../context/AuthContext"
 import { deleteWage, getAllWages, saveProject } from "../../db/project"

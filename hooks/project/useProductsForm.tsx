@@ -1,5 +1,5 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import { ProductsFormType } from "../../../types/extraTypes";
+import { ProductsFormType } from "../../types/extraTypes";
 
 const useProductsForm = (defaultValues?: ProductsFormType) => {
     const formId = "products"

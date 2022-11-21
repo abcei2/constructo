@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import uuid from "react-uuid"
-import useProductsForm from "../../components/hooks/project/useProductsForm"
+import useProductsForm from "../../hooks/project/useProductsForm"
 import ProductsForm from "../../components/project/prodsProviders/ProductsForm"
 import { useAuth } from "../../context/AuthContext"
 import { deleteProduct, getAllCategories, getAllProducts, getProjectData, saveProject } from "../../db/project"
