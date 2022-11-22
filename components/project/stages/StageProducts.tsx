@@ -4,9 +4,11 @@ import { Product, StageProduct } from "../../../types/dbTypes"
 
 const StageProducts = (props:{
     projectRef:string,
-    categoryRef:string
+    categoryRef:string,
+    stageCategoryIndex:number,
+    setStageCategories:any
 }) => {
-    const {projectRef,categoryRef}= props
+    const { projectRef, categoryRef, stageCategoryIndex, setStageCategories }= props
 
     const productsSelectorRef = useRef(null)
 
@@ -16,7 +18,11 @@ const StageProducts = (props:{
         Array<{ stageProduct: StageProduct, product: Product }>
     >([])
 
-
+    useEffect(
+        ()=>{
+            console.log(stageProducts)
+        },[stageProducts]
+    )
 
 
     useEffect(
@@ -106,12 +112,40 @@ const StageProducts = (props:{
                 <tbody>
                     {
                         stageProducts.map(
-                            (stageProduct, index) => <tr key={index}>
+                            (stageProduct, stageProductIndex) => <tr key={stageProductIndex}>
                                 <th><input value={stageProduct.product.name} disabled className="text-center  disabled border border-gray-500 rounded" /></th>
-                                <th><input  className="text-center border border-gray-500 rounded" /></th>
+                                <th><input onChange={
+                                    (e)=>{
+                                        const newStageProducts = stageProducts.map(
+                                            (stageProductData, index) => {
+                                                if (index == stageProductIndex)
+                                                    stageProductData.stageProduct.quantity = +e.target.value
+                                                return stageProductData
+                                            }
+                                        )
+                                        const newCategoryBalance = newStageProducts.reduce(
+                                            (acc, current: { stageProduct: StageProduct, product: Product }) =>
+                                                 acc + current.stageProduct.quantity * (+current.product.price),0)
+                                        
+                                        setStageCategories(
+                                            (oldStageCategories:any) => {
+                                                return oldStageCategories.map(
+                                                    (oldStageCategory:any, oldStageCategoryIndex:number) => {
+                                                        if (oldStageCategoryIndex == stageCategoryIndex){
+                                                            console.log(newCategoryBalance)
+                                                            oldStageCategory.stageCategory.balance = newCategoryBalance
+                                                        }
+                                                        return oldStageCategory
+                                                    }
+                                                )
+                                            }
+                                        )
+                                        setStageProducts(newStageProducts)
+                                    }
+                                } className="text-center border border-gray-500 rounded" /></th>
                                 <th><input value="und" disabled className="text-center disabled border border-gray-500 rounded" /></th>
-                                <th><input value="$100" disabled className="text-center disabled border border-gray-500 rounded" /></th>
-                                <th><input value="$1.000" disabled className="text-center disabled border border-gray-500 rounded" /></th>
+                                <th><input value={stageProduct.product.price} disabled className="text-center disabled border border-gray-500 rounded" /></th>
+                                <th><input value={stageProduct.product.price * stageProduct.stageProduct.quantity} disabled className="text-center disabled border border-gray-500 rounded" /></th>
                             </tr>
                         )
                     }

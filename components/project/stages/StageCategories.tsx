@@ -86,7 +86,7 @@ const StageCategories = (props: {
                         </div>
                     </div>
                    
-                    <StageProducts projectRef={projectRef} categoryRef={stageCategory.category.ref}></StageProducts>
+                    <StageProducts projectRef={projectRef} categoryRef={stageCategory.category.ref} stageCategoryIndex={index} setStageCategories={setStageCategories}></StageProducts>
                 </div>
             )
         }
