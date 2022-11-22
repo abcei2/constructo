@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
-import { Product } from "../../types/dbTypes";
+import { Product } from "../../../types/dbTypes";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ProductType } from "../../types/extraTypes";
+import { ProductType } from "../../../types/extraTypes";
 
 type ProductsModalFormType = {
     productModalData: ProductType;

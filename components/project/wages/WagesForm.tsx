@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { EmployeeWage } from "../../types/dbTypes";
-import Modal from "../Modal";
+import { EmployeeWage } from "../../../types/dbTypes";
+import Modal from "../../Modal";
 import WagesModalForm from "./WageModalForm";
 import 'react-toastify/dist/ReactToastify.css';
-import { WagesFormPropsType } from "../../types/extraTypes";
+import { WagesFormPropsType } from "../../../types/extraTypes";
 
 const WagesForm = (props: WagesFormPropsType) => {
 
