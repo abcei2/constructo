@@ -64,7 +64,7 @@ export type StageCategory = {
 
 export type StageProduct = {
     ref:string,
-    balance: number
+    quantity: number
 
 
 }

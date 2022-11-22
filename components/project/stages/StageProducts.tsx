@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { getAllProducts } from "../../../db/project"
 import { Product, StageProduct } from "../../../types/dbTypes"
 
@@ -7,8 +7,18 @@ const StageProducts = (props:{
     categoryRef:string
 }) => {
     const {projectRef,categoryRef}= props
+
+    const productsSelectorRef = useRef(null)
+
     const [products, setProducts] = useState<Array<Product>>([])
-    const [stageProducts, setStageProducts] = useState<Array<StageProduct>>([])
+
+    const [stageProducts, setStageProducts] = useState<
+        Array<{ stageProduct: StageProduct, product: Product }>
+    >([])
+
+
+
+
     useEffect(
         ()=>{
             if (projectRef && categoryRef)
@@ -19,28 +29,68 @@ const StageProducts = (props:{
                 )
         }, [projectRef, categoryRef]
     )
-    return products.length>0? <div >
-        <div className="flex my-5 gap-5">
-            <select className="w-[100%] " onChange={
-                (e: ChangeEvent<HTMLSelectElement>) => {
-                    console.log(e.currentTarget.tabIndex)
-                }
-            }>
-                {
-                    products.map(
-                        (product, index) => <option key={index} value={product.ref}>
-                            {product.name}
-                        </option>
+
+    const getNotAddedProducts = () => {
+        return products.filter(
+            (product) => {
+                if (stageProducts.length > 0) {
+                    const currentStageProductsRefs = stageProducts.map(
+                        (stageProduct) => stageProduct.product.ref
                     )
-                }                
-               
-            </select>
+                    return !currentStageProductsRefs.includes(product.ref)
+                }
+                return true
+            }
+        )
+    }
 
-            <button className="button-secondary w-[30%]">
-                Agrergar producto
-            </button>
+    const addStageProduct= () => {
+        if (stageProducts.length < products.length && productsSelectorRef.current) {
+            const currentSelector: HTMLSelectElement  = productsSelectorRef.current
+            if (currentSelector.selectedIndex > 0 ){
+                setStageProducts(
+                    [
+                        ...stageProducts, {
+                            stageProduct: { quantity: 0, ref: "" },
+                            product: products[currentSelector.selectedIndex - 1]
+                        }
+                    ]
+                )
+                currentSelector.selectedIndex = 0
+            }
+        }
+    }
 
-        </div>
+    return products.length>0? <div >
+        {
+            stageProducts.length < products.length ? <div className="flex my-5 gap-5">
+                <select className="w-[100%] " ref={productsSelectorRef}>
+                    <option value={-1} key={-1}>Seleccione un producto para agregar.</option>
+                    {
+                        products.map(
+                            (product, index) => {
+                                let hiddenOpt = false
+                                if (stageProducts.length > 0) {
+                                    const currentStageProductRefs = stageProducts.map(
+                                        (stageProduct) => stageProduct.product.ref
+                                    )
+                                    hiddenOpt = currentStageProductRefs.includes(product.ref)
+                                }
+                                return <option key={index} value={index} hidden={hiddenOpt}>
+                                    {product.name}
+                                </option>
+                            } 
+                        )
+                    }                
+                
+                </select>
+
+                <button onClick={addStageProduct} className="button-secondary w-[30%]">
+                    Agrergar producto
+                </button>
+
+            </div>:undefined
+        }
         <div className="lg:flex lg:justify-center  overflow-auto ">
 
             <table className="" >
@@ -57,8 +107,8 @@ const StageProducts = (props:{
                     {
                         stageProducts.map(
                             (stageProduct, index) => <tr key={index}>
-                                <th><input value="1" disabled className="text-center  disabled border border-gray-500 rounded" /></th>
-                                <th><input value="10" disabled className="text-center border border-gray-500 rounded" /></th>
+                                <th><input value={stageProduct.product.name} disabled className="text-center  disabled border border-gray-500 rounded" /></th>
+                                <th><input  className="text-center border border-gray-500 rounded" /></th>
                                 <th><input value="und" disabled className="text-center disabled border border-gray-500 rounded" /></th>
                                 <th><input value="$100" disabled className="text-center disabled border border-gray-500 rounded" /></th>
                                 <th><input value="$1.000" disabled className="text-center disabled border border-gray-500 rounded" /></th>
