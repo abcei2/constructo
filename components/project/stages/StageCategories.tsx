@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { getAllCategories } from "../../../db/project"
 import { Category, StageCategory } from "../../../types/dbTypes"
 import StageProducts from "./StageProducts"
@@ -8,39 +8,29 @@ const StageCategories = (props: {
 }) => {
     const { projectRef } = props
 
+    const categoriesSelectorRef = useRef(null)
+
     const [categories, setCategories] = useState<Array<Category>>([])
-    const [currentCategoryIndex, setCurrentCategoryIndex] = useState<number>(0)
 
     const [stageCategories, setStageCategories] = useState<Array<{stageCategory:StageCategory,category:Category}>>([])
 
     const addStageCategory = () => {
-        if (stageCategories.length < categories.length){
-            setStageCategories(
-                [
-                    ...stageCategories, {
-                        stageCategory: {balance:0,ref:""},
-                        category: categories[currentCategoryIndex]
-                    }
-                ]
-            )
-            setCurrentCategoryIndex(0)
+        if (stageCategories.length < categories.length && categoriesSelectorRef.current) {
+            const currentSelector: HTMLSelectElement = categoriesSelectorRef.current
+            if (currentSelector.selectedIndex>0){
+                setStageCategories(
+                    [
+                        ...stageCategories, {
+                            stageCategory: { balance: 0, ref: "" },
+                            category: categories[currentSelector.selectedIndex-1]
+                        }
+                    ]
+                )
+                currentSelector.selectedIndex = 0
+            }
         }      
     }
     
-    const getNotAddedCategories = () =>{
-        return categories.filter(
-            (category) => {
-                if (stageCategories.length > 0) {
-                    const currentStageCategoriesRefs = stageCategories.map(
-                        (stageCategory) => stageCategory.category.ref
-                    )
-                    return !currentStageCategoriesRefs.includes(category.ref)
-                }
-                return true
-            }
-        )
-    }
-
     useEffect(
         () => {
             if (projectRef) {
@@ -54,16 +44,22 @@ const StageCategories = (props: {
     return !categories || categories.length == 0 ? <></> : <div>
         {
             stageCategories.length < categories.length ? <div className="flex m-5 gap-5 ">
-                <select className="w-[100%] " onChange={
-                    (e: ChangeEvent<HTMLSelectElement>) => {
-                        setCurrentCategoryIndex(e.currentTarget.selectedIndex)
-                    }
-                }>
+                <select ref={categoriesSelectorRef} className="w-[100%] ">
+                    <option value={-1} key={-1}>Seleccione una categoría para agregar.</option>
                     {
-                        getNotAddedCategories().map(
-                            (category, index) => <option key={index} value={category.ref}>
-                                {category.name}
-                            </option>
+                        categories.map(
+                            (category, index) =>{
+                                let hiddenOpt = false
+                                if (stageCategories.length > 0) {
+                                    const currentStageCategoriesRefs = stageCategories.map(
+                                        (stageCategory) => stageCategory.category.ref
+                                    )
+                                    hiddenOpt = currentStageCategoriesRefs.includes(category.ref)
+                                }
+                                return <option key={index} value={index} hidden={hiddenOpt}>
+                                    {category.name}
+                                </option>
+                            } 
                         )
 
                     }
@@ -81,7 +77,7 @@ const StageCategories = (props: {
                     <div className="text-xl  justify-between flex">
                         <div>
                             ❌
-                            {categories[index].name}
+                            {stageCategory.category.name}
 
                         </div>
                         <div>
