@@ -50,3 +50,20 @@ export type User = {
     name: string,
     email: string,
 }
+
+
+export type Stage = {
+    description:string;
+
+}
+
+export type StageCategory = {
+    balance:number,
+    category:Category
+}
+
+export type StageProduct = {
+    
+
+
+}
