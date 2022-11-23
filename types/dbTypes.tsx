@@ -54,6 +54,7 @@ export type User = {
 
 export type Stage = {
     description:string;
+    balance: number;
 
 }
 

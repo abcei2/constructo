@@ -1,14 +1,17 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { getAllProducts } from "../../../db/project"
-import { Product, StageProduct } from "../../../types/dbTypes"
+import { Product, Stage, StageProduct } from "../../../types/dbTypes"
 
 const StageProducts = (props:{
     projectRef:string,
     categoryRef:string,
     stageCategoryIndex:number,
-    setStageCategories:any
+    stageIndex:number,
+    setStagesInfo:any,
+    setStageCategories:any,
+
 }) => {
-    const { projectRef, categoryRef, stageCategoryIndex, setStageCategories }= props
+    const { projectRef, categoryRef, stageCategoryIndex, setStageCategories, setStagesInfo,stageIndex }= props
 
     const productsSelectorRef = useRef(null)
 
@@ -17,12 +20,6 @@ const StageProducts = (props:{
     const [stageProducts, setStageProducts] = useState<
         Array<{ stageProduct: StageProduct, product: Product }>
     >([])
-
-    useEffect(
-        ()=>{
-            console.log(stageProducts)
-        },[stageProducts]
-    )
 
 
     useEffect(
@@ -35,20 +32,6 @@ const StageProducts = (props:{
                 )
         }, [projectRef, categoryRef]
     )
-
-    const getNotAddedProducts = () => {
-        return products.filter(
-            (product) => {
-                if (stageProducts.length > 0) {
-                    const currentStageProductsRefs = stageProducts.map(
-                        (stageProduct) => stageProduct.product.ref
-                    )
-                    return !currentStageProductsRefs.includes(product.ref)
-                }
-                return true
-            }
-        )
-    }
 
     const addStageProduct= () => {
         if (stageProducts.length < products.length && productsSelectorRef.current) {
@@ -116,6 +99,7 @@ const StageProducts = (props:{
                                 <th><input value={stageProduct.product.name} disabled className="text-center  disabled border border-gray-500 rounded" /></th>
                                 <th><input onChange={
                                     (e)=>{
+
                                         const newStageProducts = stageProducts.map(
                                             (stageProductData, index) => {
                                                 if (index == stageProductIndex)
@@ -123,16 +107,16 @@ const StageProducts = (props:{
                                                 return stageProductData
                                             }
                                         )
+
                                         const newCategoryBalance = newStageProducts.reduce(
                                             (acc, current: { stageProduct: StageProduct, product: Product }) =>
                                                  acc + current.stageProduct.quantity * (+current.product.price),0)
-                                        
+
                                         setStageCategories(
                                             (oldStageCategories:any) => {
                                                 return oldStageCategories.map(
                                                     (oldStageCategory:any, oldStageCategoryIndex:number) => {
                                                         if (oldStageCategoryIndex == stageCategoryIndex){
-                                                            console.log(newCategoryBalance)
                                                             oldStageCategory.stageCategory.balance = newCategoryBalance
                                                         }
                                                         return oldStageCategory
@@ -140,9 +124,11 @@ const StageProducts = (props:{
                                                 )
                                             }
                                         )
+
                                         setStageProducts(newStageProducts)
+                                       
                                     }
-                                } className="text-center border border-gray-500 rounded" /></th>
+                                } className="text-center bormder border-gray-500 rounded" /></th>
                                 <th><input value="und" disabled className="text-center disabled border border-gray-500 rounded" /></th>
                                 <th><input value={stageProduct.product.price} disabled className="text-center disabled border border-gray-500 rounded" /></th>
                                 <th><input value={stageProduct.product.price * stageProduct.stageProduct.quantity} disabled className="text-center disabled border border-gray-500 rounded" /></th>

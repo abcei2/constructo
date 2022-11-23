@@ -1,36 +1,39 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { getAllCategories } from "../../../db/project"
-import { Category, StageCategory } from "../../../types/dbTypes"
+import { Category, Stage, StageCategory } from "../../../types/dbTypes"
 import StageProducts from "./StageProducts"
 
 const StageCategories = (props: {
-    projectRef: string
+    projectRef: string,
+    stageIndex: any,
+    setStagesInfo: any,
+
 }) => {
-    const { projectRef } = props
+    const { projectRef, setStagesInfo, stageIndex } = props
 
     const categoriesSelectorRef = useRef(null)
 
     const [categories, setCategories] = useState<Array<Category>>([])
 
-    const [stageCategories, setStageCategories] = useState<Array<{stageCategory:StageCategory,category:Category}>>([])
+    const [stageCategories, setStageCategories] = useState<Array<{ stageCategory: StageCategory, category: Category }>>([])
 
     const addStageCategory = () => {
         if (stageCategories.length < categories.length && categoriesSelectorRef.current) {
             const currentSelector: HTMLSelectElement = categoriesSelectorRef.current
-            if (currentSelector.selectedIndex>0){
+            if (currentSelector.selectedIndex > 0) {
                 setStageCategories(
                     [
                         ...stageCategories, {
                             stageCategory: { balance: 0, ref: "" },
-                            category: categories[currentSelector.selectedIndex-1]
+                            category: categories[currentSelector.selectedIndex - 1]
                         }
                     ]
                 )
                 currentSelector.selectedIndex = 0
             }
-        }      
+        }
     }
-    
+
     useEffect(
         () => {
             if (projectRef) {
@@ -41,6 +44,28 @@ const StageCategories = (props: {
             }
         }, [projectRef]
     )
+
+    useEffect(
+        () => {
+            console.log(stageCategories)
+            if (stageCategories.length > 0) {
+                const newStageBalance = stageCategories.reduce((acc,category)=>acc+category.stageCategory.balance,0)
+                setStagesInfo(
+                    (oldStagesInfo: Array<Stage>) => {
+                        return oldStagesInfo.map(
+                            (oldStageInfo, oldStageInfoIndex) => {
+                                if (oldStageInfoIndex == stageIndex)
+                                    oldStageInfo.balance = newStageBalance
+                                return oldStageInfo
+                            }
+                        )
+                    }
+                )
+            }
+
+        }, [stageCategories, stageIndex, setStagesInfo]
+    )
+
     return !categories || categories.length == 0 ? <></> : <div>
         {
             stageCategories.length < categories.length ? <div className="flex m-5 gap-5 ">
@@ -48,7 +73,7 @@ const StageCategories = (props: {
                     <option value={-1} key={-1}>Seleccione una categoría para agregar.</option>
                     {
                         categories.map(
-                            (category, index) =>{
+                            (category, index) => {
                                 let hiddenOpt = false
                                 if (stageCategories.length > 0) {
                                     const currentStageCategoriesRefs = stageCategories.map(
@@ -59,7 +84,7 @@ const StageCategories = (props: {
                                 return <option key={index} value={index} hidden={hiddenOpt}>
                                     {category.name}
                                 </option>
-                            } 
+                            }
                         )
 
                     }
@@ -68,7 +93,7 @@ const StageCategories = (props: {
                 <button onClick={addStageCategory} className="button-primary w-[30%]">
                     Agrergar categoría
                 </button>
-            </div>:undefined
+            </div> : undefined
         }
 
         {
@@ -85,8 +110,8 @@ const StageCategories = (props: {
 
                         </div>
                     </div>
-                   
-                    <StageProducts projectRef={projectRef} categoryRef={stageCategory.category.ref} stageCategoryIndex={index} setStageCategories={setStageCategories}></StageProducts>
+
+                    <StageProducts projectRef={projectRef} categoryRef={stageCategory.category.ref} stageCategoryIndex={index} stageIndex={stageIndex} setStagesInfo={setStagesInfo} setStageCategories={setStageCategories}></StageProducts>
                 </div>
             )
         }

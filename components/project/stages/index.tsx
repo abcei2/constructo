@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { Stage } from "../../../types/dbTypes";
 import Acordion from "../../Acordion";
 import StageCategories from "./StageCategories";
+import StageHeader from "./StageHeader";
 
 const Stages = (props: {
     projectRef: string
@@ -9,13 +10,13 @@ const Stages = (props: {
 
     const { projectRef } = props
     const [newStageDescription, setNewStageDescription] = useState<string>("")
-    const [stageList, setStageList] = useState<Array<Stage>>([])
+    const [stagesInfo, setStagesInfo] = useState<Array<Stage>>([])
 
     const addStage = () => {
-        setStageList((oldStageList) => {
+        setStagesInfo((oldStagesInfo) => {
             return [
-                ...oldStageList,
-                { description: newStageDescription }
+                ...oldStagesInfo,
+                { description: newStageDescription, balance:0 }
             ]
         })
     }
@@ -38,13 +39,13 @@ const Stages = (props: {
 
             <div className="h-screen flex flex-col   gap-4   ">
                 {
-                    stageList.map(
-                        (stageItem, index) => <Acordion key={index} headerText={stageItem.description}>
-                            <StageCategories projectRef={projectRef} />
+                    stagesInfo.map(
+                        (stageItem, index) => <Acordion key={index} headerTemplate={<StageHeader stageInfo={stageItem}/>}>
+                            <StageCategories projectRef={projectRef} setStagesInfo={setStagesInfo } stageIndex={index}/>
                         </Acordion>
                     )
                 }
-
+                <br/>
             </div>
 
         </div>
