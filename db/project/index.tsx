@@ -204,3 +204,41 @@ export const saveStageProductsDB = (
     batch.commit()
 
 }
+export const getAllStages = async (projectRef: string) => {
+    const collectionObj = collection(projectsCollection, projectRef, STAGES_COLLECTION)
+    
+    const q = query(collectionObj);
+    const snap = await getDocs(q);
+    return snap.docs.map((doc) => {
+        return {
+            ...doc.data(),
+            ref: doc.id
+        }
+    });
+}
+
+export const getAllStageProducts = async (projectRef: string, stageRef:string, categoryRef: string) => {
+    const collectionObj = collection(projectsCollection, projectRef, STAGES_COLLECTION, stageRef, CATEGORIES_COLLECTION, categoryRef, PRODUCTS_COLLECTION)
+
+    const q = query(collectionObj);
+    const snap = await getDocs(q);
+    return snap.docs.map((doc) => {
+        return {
+            ...doc.data(),
+            ref: doc.id
+        }
+    });
+}
+
+export const getAllStageCategories = async (projectRef: string, stageRef: string) => {
+    const collectionObj = collection(projectsCollection, projectRef, STAGES_COLLECTION, stageRef, CATEGORIES_COLLECTION)
+
+    const q = query(collectionObj);
+    const snap = await getDocs(q);
+    return snap.docs.map((doc) => {
+        return {
+            ...doc.data(),
+            ref: doc.id
+        }
+    });
+}

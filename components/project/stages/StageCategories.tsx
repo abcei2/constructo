@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import { StageContext } from "../../../context/StageContext"
 import { StagesContext } from "../../../context/StagesContext"
-import { getAllCategories, saveStageCategoriesDB } from "../../../db/project"
+import { getAllCategories, getAllStageCategories, saveStageCategoriesDB } from "../../../db/project"
 import { Category, Stage, StageCategory } from "../../../types/dbTypes"
 import StageProducts from "./StageProducts"
 
@@ -47,12 +47,33 @@ const StageCategories = () => {
     useEffect(
         () => {
             if (projectRef) {
+
                 getAllCategories(projectRef).then(
-                    (categories: any) => setCategories(categories)
+                    (categories: any) => {
+                        getAllStageCategories(projectRef, stageItem.ref).then(
+
+                            (stageCategoriesData: any) => {
+                                setStageCategories( stageCategoriesData.map(
+                                        (stageCategoryData:StageCategory, index:number) => {
+                                            return {
+                                                stageCategory:stageCategoryData,
+                                                category: categories[index],
+
+                                            }
+                                        }
+                                    )
+                                )
+                            }
+                        )
+                        setCategories(categories)
+                      
+                    }
                 )
+
+                console.log("loading")
                 //getAllStageCategories()
             }
-        }, [projectRef]
+        }, [projectRef, stageItem.ref]
     )
 
     useEffect(

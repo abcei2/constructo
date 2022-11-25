@@ -1,7 +1,8 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import uuid from "react-uuid";
 import { StageContextProvider } from "../../../context/StageContext";
 import { StagesContext } from "../../../context/StagesContext";
+import { getAllStages } from "../../../db/project";
 import { Stage } from "../../../types/dbTypes";
 import StageMain from "./StageMain";
 
@@ -18,6 +19,17 @@ const Stages = () => {
             ]
         })
     }
+    
+    useEffect(
+        () => {
+            if (projectRef) {
+                getAllStages(projectRef).then(
+                    (stagesData: any) => setStagesInfo(stagesData)
+                )
+                //getAllStageCategories()
+            }
+        }, [projectRef, setStagesInfo]
+    )
 
     return projectRef ? (
         <div className=" max-h-screen">
