@@ -1,22 +1,35 @@
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { Stage } from "../types/dbTypes";
 
-type StageContexType = {
-    stageIndex: string,
-    stageItem: Stage
-}
-const StageContext = createContext<StageContexType | any>(null);
+
+const StageContext = createContext<any>(null);
 
 const StageContextProvider = (props: {
     children: React.ReactNode,
-    stageIndex: string,
+    stageIndex: number,
     stageItem: Stage
 }) => {
 
     const { children, stageIndex, stageItem } = props
+    const [isDirty, setIsDirty] = useState<boolean>(false)
+    const [saveStage, setSaveStage] = useState<boolean>(false)
+    const [saveStageCategories, setSaveStageCategories] = useState<boolean>(false)
+    const [saveStageProducts, setSaveStageProducts] = useState<boolean>(false)    
+
+    const onSaveAll= () =>{
+        setSaveStage(true)
+        setSaveStageCategories(true)
+        setSaveStageProducts(true)        
+    }
 
     return (
-        <StageContext.Provider value={{ stageIndex, stageItem }}>
+        <StageContext.Provider value={{ 
+            stageIndex, stageItem, 
+            isDirty, setIsDirty, 
+            saveStage, setSaveStage, 
+            saveStageCategories, setSaveStageCategories, 
+            saveStageProducts, setSaveStageProducts, onSaveAll  
+        }}>
             {children}
         </StageContext.Provider>
     );

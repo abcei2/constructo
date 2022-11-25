@@ -1,14 +1,14 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import { StageContext } from "../../../context/StageContext"
 import { StagesContext } from "../../../context/StagesContext"
-import { getAllCategories } from "../../../db/project"
+import { getAllCategories, saveStageCategoriesDB } from "../../../db/project"
 import { Category, Stage, StageCategory } from "../../../types/dbTypes"
 import StageProducts from "./StageProducts"
 
 const StageCategories = () => {
 
     const { setStagesInfo, projectRef } = useContext(StagesContext)
-    const { stageIndex } = useContext(StageContext)
+    const { stageIndex, saveStageCategories, setSaveStageCategories, stageItem } = useContext(StageContext)
 
     const categoriesSelectorRef = useRef(null)
 
@@ -32,6 +32,17 @@ const StageCategories = () => {
         }
     }
 
+    useEffect(
+        () => {
+            if (saveStageCategories) {
+                const stageCategoriesData = stageCategories.map(
+                    (stageCategory) => stageCategory.stageCategory
+                )
+                saveStageCategoriesDB(projectRef, "", stageItem.ref, stageCategoriesData)
+                setSaveStageCategories(false)
+            }
+        }, [saveStageCategories, setSaveStageCategories, projectRef, stageItem.ref,stageCategories]
+    )
 
     useEffect(
         () => {

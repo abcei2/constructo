@@ -137,19 +137,18 @@ export const deleteWage = async (projectRef: string, wageRef: string) => {
 }
 
 
-const saveStage = (
+export const saveStageDB = async (
     projectRef: string,
     projectOwner: string,
     stageData:Stage
 )=>{
-    const batch = writeBatch(db);
     const {ref, ...stage} = stageData
     const stageProductsDoc = doc(projectsCollection, projectRef, STAGES_COLLECTION, ref)
-    setDoc(stageProductsDoc, stage)
+    await setDoc(stageProductsDoc, stage)
 }
 
 
-const saveStageCategories = (
+export const saveStageCategoriesDB = (
     projectRef: string,
     projectOwner: string,
     stageRef: string,
@@ -175,7 +174,7 @@ const saveStageCategories = (
 }
 
 
-const saveStageProducts = (
+export const saveStageProductsDB = (
     projectRef: string,
     projectOwner: string,
     stageRef: string,

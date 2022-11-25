@@ -3,9 +3,9 @@ import { StageContext } from "../../../context/StageContext"
 import { Stage } from "../../../types/dbTypes"
 
 const StageHeader = ()=>{
-    const { stageItem } = useContext(StageContext)
+    const { stageItem, onSaveAll } = useContext(StageContext)
     return <>
-        <button className="button-secondary">Save</button>
+        <button className="button-secondary" onClick={onSaveAll}>Save</button>
 
         <div className="w-full flex gap-5 justify-between">
             <textarea className="w-full border rounded" defaultValue={stageItem.description} />            

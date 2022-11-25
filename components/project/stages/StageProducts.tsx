@@ -1,7 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react"
+import { StageContext } from "../../../context/StageContext"
 import { StagesContext } from "../../../context/StagesContext"
-import { getAllProducts } from "../../../db/project"
-import { Product, Stage, StageProduct } from "../../../types/dbTypes"
+import { getAllProducts, saveStageProductsDB} from "../../../db/project"
+import { Product, StageProduct } from "../../../types/dbTypes"
 
 const StageProducts = (props:{
     categoryRef:string,
@@ -11,6 +12,7 @@ const StageProducts = (props:{
 }) => {
     const { categoryRef, stageCategoryIndex, setStageCategories }= props
 
+    const { stageItem, saveStageProducts, setSaveStageProducts } = useContext(StageContext)
     const { projectRef } = useContext(StagesContext)
 
     const productsSelectorRef = useRef(null)
@@ -20,6 +22,18 @@ const StageProducts = (props:{
     const [stageProducts, setStageProducts] = useState<
         Array<{ stageProduct: StageProduct, product: Product }>
     >([])
+
+    useEffect(
+        ()=>{
+            if (saveStageProducts){
+                const stageProductData = stageProducts.map(
+                    (stageProduct) => stageProduct.stageProduct
+                )
+                saveStageProductsDB(projectRef, "", stageItem.ref, categoryRef, stageProductData)
+                setSaveStageProducts(false)
+            }
+        }, [saveStageProducts, setSaveStageProducts, projectRef, categoryRef, stageItem, stageProducts]
+    )
 
 
     useEffect(
@@ -99,7 +113,7 @@ const StageProducts = (props:{
                                 <th><input value={stageProduct.product.name} disabled className="text-center  disabled border border-gray-500 rounded" /></th>
                                 <th><input onChange={
                                     (e)=>{
-
+                                        
                                         const newStageProducts = stageProducts.map(
                                             (stageProductData, index) => {
                                                 if (index == stageProductIndex)
@@ -126,7 +140,6 @@ const StageProducts = (props:{
                                         )
 
                                         setStageProducts(newStageProducts)
-                                       
                                     }
                                 } className="text-center bormder border-gray-500 rounded" /></th>
                                 <th><input value="und" disabled className="text-center disabled border border-gray-500 rounded" /></th>
