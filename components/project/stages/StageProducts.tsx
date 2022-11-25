@@ -1,17 +1,17 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
+import { StagesContext } from "../../../context/StagesContext"
 import { getAllProducts } from "../../../db/project"
 import { Product, Stage, StageProduct } from "../../../types/dbTypes"
 
 const StageProducts = (props:{
-    projectRef:string,
     categoryRef:string,
     stageCategoryIndex:number,
-    stageIndex:number,
-    setStagesInfo:any,
     setStageCategories:any,
 
 }) => {
-    const { projectRef, categoryRef, stageCategoryIndex, setStageCategories, setStagesInfo,stageIndex }= props
+    const { categoryRef, stageCategoryIndex, setStageCategories }= props
+
+    const { projectRef } = useContext(StagesContext)
 
     const productsSelectorRef = useRef(null)
 
@@ -40,7 +40,7 @@ const StageProducts = (props:{
                 setStageProducts(
                     [
                         ...stageProducts, {
-                            stageProduct: { quantity: 0, ref: "" },
+                            stageProduct: { quantity: 0, ref: products[currentSelector.selectedIndex - 1].ref },
                             product: products[currentSelector.selectedIndex - 1]
                         }
                     ]

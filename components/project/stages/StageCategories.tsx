@@ -1,20 +1,18 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
+import { StageContext } from "../../../context/StageContext"
+import { StagesContext } from "../../../context/StagesContext"
 import { getAllCategories } from "../../../db/project"
 import { Category, Stage, StageCategory } from "../../../types/dbTypes"
 import StageProducts from "./StageProducts"
 
-const StageCategories = (props: {
-    projectRef: string,
-    stageIndex: any,
-    setStagesInfo: any,
+const StageCategories = () => {
 
-}) => {
-    const { projectRef, setStagesInfo, stageIndex } = props
+    const { setStagesInfo, projectRef } = useContext(StagesContext)
+    const { stageIndex } = useContext(StageContext)
 
     const categoriesSelectorRef = useRef(null)
 
     const [categories, setCategories] = useState<Array<Category>>([])
-
     const [stageCategories, setStageCategories] = useState<Array<{ stageCategory: StageCategory, category: Category }>>([])
 
     const addStageCategory = () => {
@@ -24,7 +22,7 @@ const StageCategories = (props: {
                 setStageCategories(
                     [
                         ...stageCategories, {
-                            stageCategory: { balance: 0, ref: "" },
+                            stageCategory: { balance: 0, ref: categories[currentSelector.selectedIndex - 1].ref },
                             category: categories[currentSelector.selectedIndex - 1]
                         }
                     ]
@@ -33,6 +31,7 @@ const StageCategories = (props: {
             }
         }
     }
+
 
     useEffect(
         () => {
@@ -47,8 +46,7 @@ const StageCategories = (props: {
 
     useEffect(
         () => {
-            console.log(stageCategories)
-            if (stageCategories.length > 0) {
+            if (stageCategories.length > 0 && categories) {
                 const newStageBalance = stageCategories.reduce((acc,category)=>acc+category.stageCategory.balance,0)
                 setStagesInfo(
                     (oldStagesInfo: Array<Stage>) => {
@@ -63,7 +61,7 @@ const StageCategories = (props: {
                 )
             }
 
-        }, [stageCategories, stageIndex, setStagesInfo]
+        }, [stageCategories, stageIndex, setStagesInfo, categories]
     )
 
     return !categories || categories.length == 0 ? <></> : <div>
@@ -111,7 +109,7 @@ const StageCategories = (props: {
                         </div>
                     </div>
 
-                    <StageProducts projectRef={projectRef} categoryRef={stageCategory.category.ref} stageCategoryIndex={index} stageIndex={stageIndex} setStagesInfo={setStagesInfo} setStageCategories={setStageCategories}></StageProducts>
+                    <StageProducts categoryRef={stageCategory.category.ref} stageCategoryIndex={index}  setStageCategories={setStageCategories}></StageProducts>
                 </div>
             )
         }

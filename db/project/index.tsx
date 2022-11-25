@@ -1,13 +1,14 @@
 
-import { query,  getDocs, collection, doc, writeBatch, deleteDoc, getDoc } from "firebase/firestore";
+import { query,  getDocs, collection, doc, writeBatch, deleteDoc, getDoc, setDoc } from "firebase/firestore";
 
-import { Category, EmployeeWage, ProdsProviders, Product, Project } from "../../types/dbTypes";
+import { Category, EmployeeWage, ProdsProviders, Product, Project, Stage, StageCategory, StageProduct } from "../../types/dbTypes";
 import db from "../firebase";
 
 const PROJECTS_COLLECTION = "projects"
 const CATEGORIES_COLLECTION = "categories"
 const PRODUCTS_COLLECTION = "products"
 const WAGES_COLLECTION = "wages"
+const STAGES_COLLECTION = "stages"
 
 
 const projectsCollection = collection(db, PROJECTS_COLLECTION)
@@ -43,7 +44,7 @@ export const saveProject = (
  
 
     if (categoriesData)
-        categoriesData.map(
+        categoriesData.forEach(
             categoryData => {
                 const { ref, ...category } = categoryData
                 const categoryDoc = doc(projectsCollection, projectRef, CATEGORIES_COLLECTION, ref )
@@ -52,7 +53,7 @@ export const saveProject = (
         )
 
     if (productData)
-        productData.map(
+        productData.forEach(
             productData => {
                 const { ref, ...product } = productData
                 const productDoc = doc(projectsCollection, projectRef, CATEGORIES_COLLECTION, product.category.ref, PRODUCTS_COLLECTION, ref)
@@ -62,7 +63,7 @@ export const saveProject = (
         )
 
     if (wagesData)
-        wagesData.map(
+        wagesData.forEach(
             wageData => {
                 const {ref, ...wage}=wageData
                 const wageDoc = doc(projectsCollection, projectRef, WAGES_COLLECTION, ref)
@@ -133,4 +134,74 @@ export const deleteProduct = async (projectRef: string, categoryRef: string, pro
 export const deleteWage = async (projectRef: string, wageRef: string) => {
 
     await deleteDoc(doc(projectsCollection, projectRef, WAGES_COLLECTION, wageRef));
+}
+
+
+const saveStage = (
+    projectRef: string,
+    projectOwner: string,
+    stageData:Stage
+)=>{
+    const batch = writeBatch(db);
+    const {ref, ...stage} = stageData
+    const stageProductsDoc = doc(projectsCollection, projectRef, STAGES_COLLECTION, ref)
+    setDoc(stageProductsDoc, stage)
+}
+
+
+const saveStageCategories = (
+    projectRef: string,
+    projectOwner: string,
+    stageRef: string,
+    stageCategoriesData: Array<StageCategory>
+) => {
+
+    const batch = writeBatch(db);
+    stageCategoriesData.map(
+        (stageCategoryData) => {
+            const { ref, ...stageCategory } = stageCategoryData
+            const stageProductsDoc = doc(
+                projectsCollection, projectRef, 
+                STAGES_COLLECTION, stageRef, 
+                CATEGORIES_COLLECTION, ref
+            )
+            batch.set(stageProductsDoc, stageCategory, { merge: true });
+
+        }
+    )
+    batch.commit()
+
+
+}
+
+
+const saveStageProducts = (
+    projectRef: string,
+    projectOwner: string,
+    stageRef: string,
+    stageCategoryRef:string,
+    stageProductsData: Array<StageProduct>
+
+) =>{
+
+    const batch = writeBatch(db);
+
+    stageProductsData.forEach(
+
+        (stageProductData)=>{
+            const { ref, ...stageProduct } = stageProductData
+            const stageProductsDoc = doc(
+                projectsCollection, projectRef, 
+                STAGES_COLLECTION, stageRef,
+                CATEGORIES_COLLECTION, stageCategoryRef, 
+                PRODUCTS_COLLECTION, ref
+            )
+
+            batch.set(stageProductsDoc, stageProduct, { merge: true });
+        }
+    )
+
+
+    batch.commit()
+
 }

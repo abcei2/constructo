@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Stages from "../../components/project/stages"
+import { StagesContextProvider } from "../../context/StagesContext"
 
 const Dashboard = () => {
 
@@ -15,7 +16,9 @@ const Dashboard = () => {
             router.replace("/")
     }, [router])
     return (
-        <Stages projectRef={projectRef}/>
+        <StagesContextProvider projectRef = { projectRef }>
+            <Stages />
+        </StagesContextProvider>
     )
 
 }
