@@ -12,7 +12,7 @@ const StageProducts = (props: {
 }) => {
     const { categoryRef, stageCategoryIndex, setStageCategories } = props
 
-    const { stageItem, saveStageProducts, setSaveStageProducts } = useContext(StageContext)
+    const { stageRef, saveStageProducts, setSaveStageProducts } = useContext(StageContext)
     const { projectRef } = useContext(StagesContext)
 
     const productsSelectorRef = useRef(null)
@@ -29,10 +29,10 @@ const StageProducts = (props: {
                 const stageProductData = stageProducts.map(
                     (stageProduct) => stageProduct.stageProduct
                 )
-                saveStageProductsDB(projectRef, "", stageItem.ref, categoryRef, stageProductData)
+                saveStageProductsDB(projectRef, "", stageRef, categoryRef, stageProductData)
                 setSaveStageProducts(false)
             }
-        }, [saveStageProducts, setSaveStageProducts, projectRef, categoryRef, stageItem, stageProducts]
+        }, [saveStageProducts, setSaveStageProducts, projectRef, categoryRef, stageRef, stageProducts]
     )
 
 
@@ -41,10 +41,10 @@ const StageProducts = (props: {
             if (projectRef && categoryRef) {
                 getAllProducts(projectRef, categoryRef).then(
                     (productsData: any) => {
-                        getAllStageProducts(projectRef, stageItem.ref, categoryRef).then(
+                        getAllStageProducts(projectRef, stageRef, categoryRef).then(
                             (stageProductsData) => {
                                 setStageProducts(stageProductsData.map(
-                                    (stageProductData: Stage, index: number) => {
+                                    (stageProductData: any, index: number) => {
                                         return {
                                             stageProduct: stageProductData,
                                             product: productsData[index],
@@ -59,7 +59,7 @@ const StageProducts = (props: {
                 )
 
             }
-        }, [projectRef, categoryRef, stageItem.ref]
+        }, [projectRef, categoryRef, stageRef]
     )
 
     const addStageProduct = () => {
@@ -126,7 +126,7 @@ const StageProducts = (props: {
                         stageProducts.map(
                             (stageProduct, stageProductIndex) => <tr key={stageProductIndex}>
                                 <th><input value={stageProduct.product.name} disabled className="text-center  disabled border border-gray-500 rounded" /></th>
-                                <th><input onChange={
+                                <th><input defaultValue={stageProduct.stageProduct.quantity} onChange={
                                     (e) => {
 
                                         const newStageProducts = stageProducts.map(

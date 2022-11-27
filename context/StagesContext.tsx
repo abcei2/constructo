@@ -1,4 +1,5 @@
 import { createContext, Dispatch, SetStateAction, useState } from "react";
+import { getAllStages } from "../db/project";
 import { Stage } from "../types/dbTypes";
 
 type StagesContexType = {
@@ -15,6 +16,8 @@ const StagesContextProvider = (props: {
     const { children, projectRef } = props
     const [stagesInfo, setStagesInfo] = useState<Array<Stage>>([])
     
+ 
+
     return (
         <StagesContext.Provider value={{ stagesInfo, setStagesInfo, projectRef}}>
             {children}

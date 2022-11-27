@@ -206,7 +206,7 @@ export const saveStageProductsDB = (
 }
 export const getAllStages = async (projectRef: string) => {
     const collectionObj = collection(projectsCollection, projectRef, STAGES_COLLECTION)
-    
+
     const q = query(collectionObj);
     const snap = await getDocs(q);
     return snap.docs.map((doc) => {
@@ -241,4 +241,42 @@ export const getAllStageCategories = async (projectRef: string, stageRef: string
             ref: doc.id
         }
     });
+}
+
+
+export const deleteStage = async (projectRef: string, stageRef: string) => {
+
+    await deleteDoc(doc(projectsCollection, projectRef, STAGES_COLLECTION, stageRef));
+    
+}
+
+
+
+export const deleteStageCategories = (projectRef: string, stageRef: string, categoriesRef: Array<string>) => {
+    categoriesRef.forEach(
+        async (categoryRef) => {
+            await deleteDoc(doc(projectsCollection, projectRef, STAGES_COLLECTION, stageRef, CATEGORIES_COLLECTION, categoryRef))
+        }
+    )
+    
+}
+
+export const deleteStageCategory = async (projectRef: string, stageRef: string, categorieRef:string) => {
+
+    await deleteDoc(doc(projectsCollection, projectRef, STAGES_COLLECTION, stageRef, CATEGORIES_COLLECTION, categorieRef));
+
+}
+
+export const deleteStageProducts = (projectRef: string, stageRef:string,categoryRef:string, productsRef:Array<string>) =>{
+    productsRef.forEach(
+        async(productRef) => {
+            await deleteDoc(doc(projectsCollection, projectRef, STAGES_COLLECTION, stageRef, CATEGORIES_COLLECTION, categoryRef, PRODUCTS_COLLECTION, productRef))
+        }
+    )
+}
+
+export const deleteStageProduct = async (projectRef: string, stageRef: string, categoryRef: string, productRef:string) => {
+
+    await deleteDoc(doc(projectsCollection, projectRef, STAGES_COLLECTION, stageRef, CATEGORIES_COLLECTION, categoryRef, PRODUCTS_COLLECTION, productRef))
+
 }

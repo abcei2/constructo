@@ -19,7 +19,7 @@ const Stages = () => {
             ]
         })
     }
-    
+
     useEffect(
         () => {
             if (projectRef) {
@@ -51,7 +51,7 @@ const Stages = () => {
                 <div className="h-screen flex flex-col   gap-4   ">
                     {
                         stagesInfo.map(
-                            (stageItem: Stage, index: number) => <StageContextProvider stageItem={stageItem} stageIndex={index} key={index} >
+                            (stageItem: Stage, index: number) => <StageContextProvider projectRef={projectRef} stageItem={stageItem} stageIndex={index} key={index} >
                                 <StageMain  />
                             </StageContextProvider> 
                         )

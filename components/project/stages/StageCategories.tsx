@@ -1,47 +1,43 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import { StageContext } from "../../../context/StageContext"
 import { StagesContext } from "../../../context/StagesContext"
-import { getAllCategories, getAllStageCategories, saveStageCategoriesDB } from "../../../db/project"
+import { deleteStageCategory, getAllCategories, getAllStageCategories, saveStageCategoriesDB } from "../../../db/project"
 import { Category, Stage, StageCategory } from "../../../types/dbTypes"
 import StageProducts from "./StageProducts"
 
 const StageCategories = () => {
 
     const { setStagesInfo, projectRef } = useContext(StagesContext)
-    const { stageIndex, saveStageCategories, setSaveStageCategories, stageItem } = useContext(StageContext)
+    const { stageIndex, saveStageCategories, setSaveStageCategories, stageRef, onDeleteStage } = useContext(StageContext)
 
     const categoriesSelectorRef = useRef(null)
 
     const [categories, setCategories] = useState<Array<Category>>([])
     const [stageCategories, setStageCategories] = useState<Array<{ stageCategory: StageCategory, category: Category }>>([])
 
-    const addStageCategory = () => {
-        if (stageCategories.length < categories.length && categoriesSelectorRef.current) {
-            const currentSelector: HTMLSelectElement = categoriesSelectorRef.current
-            if (currentSelector.selectedIndex > 0) {
-                setStageCategories(
-                    [
-                        ...stageCategories, {
-                            stageCategory: { balance: 0, ref: categories[currentSelector.selectedIndex - 1].ref },
-                            category: categories[currentSelector.selectedIndex - 1]
-                        }
-                    ]
-                )
-                currentSelector.selectedIndex = 0
-            }
-        }
-    }
-
+   
     useEffect(
         () => {
             if (saveStageCategories) {
                 const stageCategoriesData = stageCategories.map(
                     (stageCategory) => stageCategory.stageCategory
                 )
-                saveStageCategoriesDB(projectRef, "", stageItem.ref, stageCategoriesData)
+                saveStageCategoriesDB(projectRef, "", stageRef, stageCategoriesData)
                 setSaveStageCategories(false)
             }
-        }, [saveStageCategories, setSaveStageCategories, projectRef, stageItem.ref,stageCategories]
+        }, [saveStageCategories, setSaveStageCategories, projectRef, stageRef, stageCategories]
+    )
+    
+    useEffect(
+        () => {
+            if (saveStageCategories) {
+                const stageCategoriesData = stageCategories.map(
+                    (stageCategory) => stageCategory.stageCategory
+                )
+                saveStageCategoriesDB(projectRef, "", stageRef, stageCategoriesData)
+                setSaveStageCategories(false)
+            }
+        }, [saveStageCategories, setSaveStageCategories, projectRef, stageRef,stageCategories]
     )
 
     useEffect(
@@ -50,7 +46,7 @@ const StageCategories = () => {
 
                 getAllCategories(projectRef).then(
                     (categories: any) => {
-                        getAllStageCategories(projectRef, stageItem.ref).then(
+                        getAllStageCategories(projectRef, stageRef).then(
 
                             (stageCategoriesData: any) => {
                                 setStageCategories( stageCategoriesData.map(
@@ -69,11 +65,8 @@ const StageCategories = () => {
                       
                     }
                 )
-
-                console.log("loading")
-                //getAllStageCategories()
             }
-        }, [projectRef, stageItem.ref]
+        }, [projectRef, stageRef]
     )
 
     useEffect(
@@ -95,6 +88,34 @@ const StageCategories = () => {
 
         }, [stageCategories, stageIndex, setStagesInfo, categories]
     )
+
+
+    const removeStageCategory = async (categoryIndex: number) => {
+        setStageCategories(
+            oldStageCategories =>  oldStageCategories.filter(
+                    (_,index) =>index != categoryIndex)  
+        )
+        
+        deleteStageCategory(projectRef, stageRef, stageCategories[categoryIndex].stageCategory.ref)
+    }
+
+
+    const addStageCategory = () => {
+        if (stageCategories.length < categories.length && categoriesSelectorRef.current) {
+            const currentSelector: HTMLSelectElement = categoriesSelectorRef.current
+            if (currentSelector.selectedIndex > 0) {
+                setStageCategories(
+                    [
+                        ...stageCategories, {
+                            stageCategory: { balance: 0, ref: categories[currentSelector.selectedIndex - 1].ref },
+                            category: categories[currentSelector.selectedIndex - 1]
+                        }
+                    ]
+                )
+                currentSelector.selectedIndex = 0
+            }
+        }
+    }
 
     return !categories || categories.length == 0 ? <></> : <div>
         {
@@ -131,7 +152,8 @@ const StageCategories = () => {
                 (stageCategory, index) => <div key={index} className="border-t border-gray-400 m-5">
                     <div className="text-xl  justify-between flex">
                         <div>
-                            ❌
+                            <button onClick={() => removeStageCategory(index)}>❌</button>
+
                             {stageCategory.category.name}
 
                         </div>
