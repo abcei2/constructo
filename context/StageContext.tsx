@@ -1,5 +1,5 @@
-import { createContext, Dispatch, SetStateAction, useState } from "react";
-import { deleteStage, deleteStageCategories, deleteStageCategory, deleteStageProducts, getAllStageCategories, getAllStageProducts } from "../db/project";
+import { createContext, useState } from "react";
+import { deleteStage, deleteStageCategories, deleteStageProducts, getAllStageCategories, getAllStageProducts } from "../db/project";
 import { Stage } from "../types/dbTypes";
 
 
@@ -20,23 +20,6 @@ const StageContextProvider = (props: {
     const [saveStageCategories, setSaveStageCategories] = useState<boolean>(false)
     const [saveStageProducts, setSaveStageProducts] = useState<boolean>(false)    
 
-
-    const onDeleteStage = async () => {
-        const categoriesRef = await getAllStageCategories(projectRef, stageRef)
-        categoriesRef.forEach(
-            async (categoryRef)=>{
-                const productsRef = await getAllStageProducts(projectRef, stageRef, categoryRef.ref)
-                deleteStageProducts(projectRef, stageRef, categoryRef.ref, productsRef.map((productRef)=>productRef.ref))
-            }
-        )
-
-        deleteStageCategories(projectRef, stageItem.ref, categoriesRef.map(
-            (categoryRef) => categoryRef.ref
-        ))
-
-        deleteStage(projectRef, stageItem.ref)
-    }
-
     const onSaveAll= () =>{
         setSaveStage(true)
         setSaveStageCategories(true)
@@ -50,7 +33,7 @@ const StageContextProvider = (props: {
             saveStage, setSaveStage, 
             saveStageCategories, setSaveStageCategories, 
             saveStageProducts, setSaveStageProducts, 
-            onSaveAll, onDeleteStage,
+            onSaveAll, 
             projectRef
         }}>
             {children}

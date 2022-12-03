@@ -1,17 +1,33 @@
 import { useContext } from "react"
 import { StageContext } from "../../../context/StageContext"
+import { StagesContext } from "../../../context/StagesContext"
 import { Stage } from "../../../types/dbTypes"
 
 const StageHeader = ()=>{
-    const { stageItem, onSaveAll, onDeleteStage } = useContext(StageContext)
+    const { stageItem, stageIndex, onSaveAll } = useContext(StageContext)
+    const { onDeleteStage, setStagesInfo } = useContext(StagesContext)
     return <>
         <button className="button-secondary" onClick={onSaveAll}>Save</button>
 
         <div className="w-full flex gap-5 justify-between">
-            <textarea className="w-full border rounded" defaultValue={stageItem.description} />            
+            <textarea className="w-full border rounded" value={stageItem.description} onChange={(ev)=>{
+                setStagesInfo( (oldStagesInfo:Array<Stage>) => {
+                    return oldStagesInfo.map(                        
+                        (oldStageInfo,index)=>{
+                            if(index == stageIndex)
+                                return {
+
+                                    ...oldStageInfo,
+                                    description: ev.target.value
+                                }
+                            return oldStageInfo
+                        }               
+                    )
+                })
+            }}/>            
         </div>
 
-        <button onClick={onDeleteStage}>❌</button>
+        <button onClick={() => onDeleteStage(stageIndex)}>❌ {stageIndex}</button>
         <div className="grid grid-cols-2 text-center">
             <label>Unidad:</label>
             <label>Precio Unitario:</label>

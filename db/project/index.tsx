@@ -144,7 +144,7 @@ export const saveStageDB = async (
 )=>{
     const {ref, ...stage} = stageData
     const stageProductsDoc = doc(projectsCollection, projectRef, STAGES_COLLECTION, ref)
-    await setDoc(stageProductsDoc, stage)
+    await setDoc(stageProductsDoc, stage, { merge: true })
 }
 
 

@@ -8,7 +8,7 @@ import StageProducts from "./StageProducts"
 const StageCategories = () => {
 
     const { setStagesInfo, projectRef } = useContext(StagesContext)
-    const { stageIndex, saveStageCategories, setSaveStageCategories, stageRef, onDeleteStage } = useContext(StageContext)
+    const { stageIndex, saveStageCategories, setSaveStageCategories, stageRef } = useContext(StageContext)
 
     const categoriesSelectorRef = useRef(null)
 
