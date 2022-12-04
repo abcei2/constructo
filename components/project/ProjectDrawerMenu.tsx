@@ -10,19 +10,19 @@ const ProjectDrawerMenu = (props: {
     const onItemClick = (currentItemIndex:number) => {
         switch (currentItemIndex) {
             case 0:
-                router.replace({
+                router.push({
                     pathname: '/management/wages',
                     query: { projectRef }
                 })
                 break;
             case 1:
-                router.replace({
+                router.push({
                     pathname: '/management/products',
                     query: { projectRef }
                 })
                 break;
             default:
-                router.replace({
+                router.push({
                     pathname: '/management',
                     query: { projectRef }
                 })
@@ -32,7 +32,7 @@ const ProjectDrawerMenu = (props: {
   
     useEffect(()=>{
         if (!router.query.projectRef && !projectRef)
-            router.replace("/")
+            router.push("/")
         else
             setProjectRef(router.query.projectRef)
     }, [router, projectRef])

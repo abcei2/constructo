@@ -26,7 +26,7 @@ const ProjectsList = () => {
                 <div>
 
                     <button className="button-secondary  m-10 " 
-                        onClick={() => router.replace({pathname: '/create'})}>Crear proyecto</button>
+                        onClick={() => router.push({pathname: '/create'})}>Crear proyecto</button>
                 </div>
             </div>
             <div className="  my-10 items-center flex  ">
@@ -38,7 +38,7 @@ const ProjectsList = () => {
                     {
                         projects.length > 0 ? projects.map(
                             (project: Project | any, index: number) => {
-                                return <div key={index} onClick={() => router.replace({
+                                return <div key={index} onClick={() => router.push({
                                     pathname: '/management',
                                     query: { projectRef: project.ref }
                                 })} className="hover:from-blue-300 hover:to-teal-300 bg-gradient-to-r p-10  lg:flex lg:justify-center">

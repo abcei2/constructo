@@ -101,7 +101,7 @@ const ProjectInitiation = () => {
                     productsData,
                     wagesData
                 )
-                router.replace( {
+                router.push( {
                     pathname: '/management',
                     query: { projectRef: newProjectRef }
                 })
@@ -229,7 +229,7 @@ const ProjectInitiation = () => {
 
                     <div className="flex p-2 mt-4">
 
-                        <button onClick={() => router.replace("/")} className="mr-5 button-secondary">volver</button>
+                        <button onClick={() => router.push("/")} className="mr-5 button-secondary">volver</button>
                         <button onClick={prevStep} className="button-normal">Previous</button>
                         <div className="flex-auto flex flex-row-reverse">
                             <button
