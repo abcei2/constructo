@@ -36,10 +36,10 @@ export type ProductType= {
     name: string,
     brand: string,
     provider: string,
-    price: number,
+    price: number | undefined,
     type: string,
-    discount: number,
-    performance: number
+    discount: number | undefined,
+    performance: number | undefined
 }
 export type ProductsFormType = {
     ref?:string,

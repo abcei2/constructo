@@ -18,7 +18,7 @@ const Products = () => {
     const [retrievingData, setRetrievingData] = useState<boolean>(false)
     const [dataRetrieve, setDataRetrieve] = useState<boolean>(false)
 
-    const { dirtyFields } =  productsFormUtils.formState
+    const { isDirty, dirtyFields } =  productsFormUtils.formState
   
     const onFieldRemove = (productField:ProductType)=> {
         if (categories && projectRef) {
@@ -169,8 +169,9 @@ const Products = () => {
 
                 <ProductsForm onFieldRemove={onFieldRemove} onFormSubmit={onProductsFormSubmit} categories={categories} productsFormUtils={productsFormUtils}></ProductsForm>
                 <button
-                    className="button-primary max-w-lg self-end"
+                    className={"button-primary max-w-lg self-end " + (isDirty ? "" : "disabled")}
                     type="submit"
+                    disabled={!isDirty}
                     form={ productsFormUtils.formId }
                 >Save </button>
             </div>

@@ -5,12 +5,12 @@ export type Project = {
 export type EmployeeWage = {
     ref:string,
     roleName: string,
-    estimatedIncrease: number,
-    transportAllowance: number,
-    socialWelfare: number,
-    welfareBenefits: number,
-    workProvisions: number,
-    totalWage: number
+    estimatedIncrease: number | undefined,
+    transportAllowance: number | undefined,
+    socialWelfare: number | undefined,
+    welfareBenefits: number | undefined,
+    workProvisions: number | undefined,
+    totalWage: number | undefined
 }
 
 type EmployeeAmount = {

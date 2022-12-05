@@ -156,12 +156,12 @@ const WagesForm = (props: WagesFormPropsType) => {
                             const initialValue: EmployeeWage = {
                                 ref: "",
                                 roleName: "",
-                                estimatedIncrease: 0,
-                                transportAllowance: 0,
-                                socialWelfare: 0,
-                                welfareBenefits: 0,
-                                workProvisions: 0,
-                                totalWage: 0
+                                estimatedIncrease: undefined,
+                                transportAllowance: undefined,
+                                socialWelfare: undefined,
+                                welfareBenefits: undefined,
+                                workProvisions: undefined,
+                                totalWage: undefined
                             }
                             append(initialValue);
                         }

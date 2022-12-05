@@ -189,10 +189,10 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                 name: "",
                                 brand: "",
                                 provider: "",
-                                price: 0,
+                                price: undefined,
                                 type: "",
-                                discount: 0,
-                                performance: 0,
+                                discount: undefined,
+                                performance: undefined,
                             }
                             append(initialValue);
                         }
