@@ -19,7 +19,7 @@ const Wages = () => {
     const [retrievingData, setRetrievingData] = useState<boolean>(false)
     const [dataRetrieve, setDataRetrieve] = useState<boolean>(false)
 
-    const { dirtyFields } = wagesFormUtils.formState
+    const { isDirty, dirtyFields } = wagesFormUtils.formState
 
     const onFieldRemove = (wageField: EmployeeWage) => {
         if(projectRef)
@@ -76,7 +76,7 @@ const Wages = () => {
                 (updatedFields: any) => updatedFields
             )
 
-            saveProject(projectRef, user.email, undefined, undefined, undefined, wagesToUpdate)
+            saveProject(projectRef, user.email, undefined, undefined, undefined, undefined, wagesToUpdate)
         }
         wagesFormUtils.reset(wagesFormUtils.getValues(), {
             keepDirty: false,
@@ -90,16 +90,10 @@ const Wages = () => {
             setRetrievingData(true)
             getAllWages(projectRef).then(
                 (dbWages) =>{
-                    console.log(dbWages)
-                    dbWages.forEach(
-                        (dbWage: EmployeeWage|any) => {
-                            console.log(dbWage)
-                            wagesFormUtils.append({
-                                ...dbWage
-                            })
-                        }
-                    )
-
+                    wagesFormUtils.reset({"employeesWage":dbWages}, {
+                        keepDirty: false,
+                        keepDirtyValues: false
+                    });                 
                     setDataRetrieve(true)
                     setRetrievingData(false)
                 }
@@ -117,11 +111,13 @@ const Wages = () => {
             router.replace("/")
     },[router])
 
+    console.log(isDirty)
     return (<div className="flex flex-col">
         <WagesForm onFieldRemove={onFieldRemove} onFormSubmit={onWagesFormSubmit} wagesFormUtils={wagesFormUtils}></WagesForm>
         <button
-            className="button-primary max-w-lg self-end"
+            className={"button-primary max-w-lg self-end " + (isDirty ? "" : "disabled")}
             type="submit"
+            disabled={!isDirty}
             form={wagesFormUtils.formId}
         >Save </button>
     </div>

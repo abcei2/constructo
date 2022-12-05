@@ -26,7 +26,6 @@ const Stages = () => {
                 getAllStages(projectRef).then(
                     (stagesData: any) => setStagesInfo(stagesData)
                 )
-                //getAllStageCategories()
             }
         }, [projectRef, setStagesInfo]
     )
