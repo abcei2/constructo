@@ -2,6 +2,7 @@ import { useState } from "react";
 import Modal from "../../Modal";
 import ProductsModalForm from "./ProductsModalForm";
 import { CategoryFormType, ProductsFormPropsType, ProductType } from "../../../types/extraTypes";
+import { formNumberInput } from "../../../constants";
 
 
 
@@ -12,7 +13,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
     const [productIndex, setProductIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)    
 
-    const { fields, append, remove, update, handleSubmit, getValues, register, formId } = productsFormUtils
+    const { fields, append, remove, update, handleSubmit, getValues, register, formId, resetField } = productsFormUtils
 
  
     return (
@@ -64,6 +65,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                     <th>Precio</th>
                                     <th>Tipo</th>
                                     <th>Descuento</th>
+                                    <th>Rendimiento</th>
                                 </tr>
                             }
                         </thead>
@@ -88,6 +90,10 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                 <th>
                                                     <button onClick={() => {
                                                         remove(index)
+                                                        resetField("products",{
+                                                            keepDirty:false,
+                                                            defaultValue:getValues("products")
+                                                        })
                                                         if (onFieldRemove)
                                                             onFieldRemove(field)
                                                     }
@@ -115,7 +121,8 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                
                                                     <input className="normal-input"
                                                         {...register(`products.${index}.name` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            maxLength: 256
                                                         })}
                                                     />
                                                 </th>
@@ -124,6 +131,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                     <input className="normal-input"
                                                         {...register(`products.${index}.brand` as const, {
                                                             required: true,
+                                                            maxLength:256
                                                         })}
                                                     />
                                                 </th>
@@ -131,7 +139,8 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input"
                                                         {...register(`products.${index}.provider` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            maxLength: 256
                                                         })}
                                                     />
                                                 </th>
@@ -139,7 +148,8 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`products.${index}.price` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>
@@ -147,7 +157,8 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input"
                                                         {...register(`products.${index}.type` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            maxLength: 256
                                                         })}
                                                     />
                                                 </th>
@@ -156,7 +167,8 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`products.${index}.discount` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>
@@ -164,7 +176,8 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`products.${index}.performance` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>

@@ -3,7 +3,7 @@ import { EmployeeWage } from "./dbTypes"
 import { 
     FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove,
     UseFieldArrayUpdate, UseFormGetValues, UseFormHandleSubmit, 
-    UseFormRegister, UseFormSetValue 
+    UseFormRegister, UseFormReset, UseFormResetField, UseFormSetValue 
 } from "react-hook-form";
 
 export type WagesFormTypes = {
@@ -16,6 +16,7 @@ export type WagesFormHookParams = {
     fields: FieldArrayWithId<WagesFormTypes, "employeesWage", "id">[],
     append: UseFieldArrayAppend<WagesFormTypes, "employeesWage">,
     remove: UseFieldArrayRemove,
+    resetField: UseFormResetField<WagesFormTypes>, 
     update: UseFieldArrayUpdate<WagesFormTypes, "employeesWage">,
     handleSubmit: UseFormHandleSubmit<WagesFormTypes>,
     setValue: UseFormSetValue<WagesFormTypes>,
@@ -55,6 +56,8 @@ export type ProductsFormHookParams = {
     fields: FieldArrayWithId<ProductsFormType, "products", "id">[],
     append: UseFieldArrayAppend<ProductsFormType, "products">,
     remove: UseFieldArrayRemove,
+    reset: UseFormReset<ProductsFormType>,
+    resetField: UseFormResetField<ProductsFormType>,
     update: UseFieldArrayUpdate<ProductsFormType, "products">,
     handleSubmit: UseFormHandleSubmit<ProductsFormType>,
     setValue: UseFormSetValue<ProductsFormType>,

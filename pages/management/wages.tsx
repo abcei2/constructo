@@ -22,7 +22,7 @@ const Wages = () => {
     const { isDirty, dirtyFields } = wagesFormUtils.formState
 
     const onFieldRemove = (wageField: EmployeeWage) => {
-        if(projectRef)
+        if (projectRef && wageField.ref)
             deleteWage(projectRef,wageField.ref)
     }
 
@@ -39,7 +39,6 @@ const Wages = () => {
                     }
 
                     if (!wageData.ref) {
-                        console.log("NO REF", wageData.ref,"a")
                         const newWageData = {
                             ...wageData,
                             ref: uuid()
@@ -111,7 +110,6 @@ const Wages = () => {
             router.replace("/")
     },[router])
 
-    console.log(isDirty)
     return (<div className="flex flex-col">
         <WagesForm onFieldRemove={onFieldRemove} onFormSubmit={onWagesFormSubmit} wagesFormUtils={wagesFormUtils}></WagesForm>
         <button

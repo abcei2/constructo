@@ -4,6 +4,7 @@ import Modal from "../../Modal";
 import WagesModalForm from "./WageModalForm";
 import 'react-toastify/dist/ReactToastify.css';
 import { WagesFormPropsType } from "../../../types/extraTypes";
+import { formNumberInput } from "../../../constants";
 
 const WagesForm = (props: WagesFormPropsType) => {
 
@@ -12,7 +13,7 @@ const WagesForm = (props: WagesFormPropsType) => {
     const [wageIndex, setWageIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)
 
-    const { fields, append, remove, update, handleSubmit, register, getValues, formId } = wagesFormUtils
+    const { fields, append, remove, update, handleSubmit, register, getValues, formId, resetField } = wagesFormUtils
     
     return (
         <div>
@@ -72,6 +73,10 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                     <button type="button"  onClick={() => {
                                                         
                                                         remove(index)
+                                                        resetField("employeesWage", {
+                                                            keepDirty: false,
+                                                            defaultValue: getValues("employeesWage")
+                                                        })
                                                         if (onFieldRemove)
                                                             onFieldRemove(field)
                                                     }
@@ -83,7 +88,8 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                 <th  >
                                                     <input className="normal-input"
                                                         {...register(`employeesWage.${index}.roleName` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            maxLength:256
                                                         })}
                                                     />
                                                 </th>
@@ -92,6 +98,7 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`employeesWage.${index}.estimatedIncrease` as const, {
                                                             required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>
@@ -99,7 +106,8 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`employeesWage.${index}.transportAllowance` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>
@@ -107,7 +115,8 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`employeesWage.${index}.socialWelfare` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>
@@ -115,7 +124,8 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`employeesWage.${index}.welfareBenefits` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>
@@ -124,7 +134,8 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`employeesWage.${index}.workProvisions` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>
@@ -132,7 +143,8 @@ const WagesForm = (props: WagesFormPropsType) => {
                                                 <th>
                                                     <input className="normal-input" type="numeric"
                                                         {...register(`employeesWage.${index}.totalWage` as const, {
-                                                            required: true
+                                                            required: true,
+                                                            ...formNumberInput
                                                         })}
                                                     />
                                                 </th>
@@ -156,12 +168,12 @@ const WagesForm = (props: WagesFormPropsType) => {
                             const initialValue: EmployeeWage = {
                                 ref: "",
                                 roleName: "",
-                                estimatedIncrease: undefined,
-                                transportAllowance: undefined,
-                                socialWelfare: undefined,
-                                welfareBenefits: undefined,
-                                workProvisions: undefined,
-                                totalWage: undefined
+                                estimatedIncrease: 0,
+                                transportAllowance: 0,
+                                socialWelfare: 0,
+                                welfareBenefits: 0,
+                                workProvisions: 0,
+                                totalWage: 0
                             }
                             append(initialValue);
                         }
