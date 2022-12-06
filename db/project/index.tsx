@@ -83,7 +83,17 @@ export const getAllProjects = async () => {
         }
     });
 }
-export const getProjectData= async (projectRef: string) => {
+
+export const getProject = async (projectRef:string) => {
+    const snap = await getDoc(doc(projectsCollection, projectRef));
+    return {
+        ...snap.data(),
+        ref: snap.id
+    }
+}
+
+
+export const getProductsData= async (projectRef: string) => {
     const projectDoc = doc(projectsCollection, projectRef)
     const categoriesSnap = await getDoc(projectDoc);
     return {

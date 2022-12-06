@@ -5,7 +5,7 @@ import ProjectDrawerMenu from "./ProjectDrawerMenu"
 const ProjectDrawer = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const router = useRouter()
-    const menuItemNames = ["Administración de cargos y cuadrillas.", "Productos y proveedores"]
+    const menuItemNames = ["Información general","Productos y proveedores", "Administración de cargos y cuadrillas.", "APU"]
 
     return (
         <div className="absolute flex">

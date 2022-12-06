@@ -4,7 +4,7 @@ import uuid from "react-uuid"
 import useProductsForm from "../../hooks/project/useProductsForm"
 import ProductsForm from "../../components/project/prodsProviders/ProductsForm"
 import { useAuth } from "../../context/AuthContext"
-import { deleteProduct, getAllCategories, getAllProducts, getProjectData, saveProject } from "../../db/project"
+import { deleteProduct, getAllCategories, getAllProducts, getProductsData, saveProject } from "../../db/project"
 import { Category } from "../../types/dbTypes"
 import { CategoryFormType, ProductsFormType, ProductType } from "../../types/extraTypes"
 
@@ -106,7 +106,6 @@ const Products = () => {
     }
 
     useEffect(() => {
-        console.log(router.query.projectRef)
         if (router.query.projectRef)
             setProjectRef(router.query.projectRef)
         else
@@ -116,7 +115,7 @@ const Products = () => {
     useEffect(() => {
         if (user && !retrievingData && !dataRetrieve && projectRef){
             setRetrievingData(true)
-            getProjectData(projectRef).then(
+            getProductsData(projectRef).then(
                 (projectData: any) => {
                     productsFormUtils.setValue("concept", projectData.concept)
                     productsFormUtils.setValue("manager", projectData.manager)

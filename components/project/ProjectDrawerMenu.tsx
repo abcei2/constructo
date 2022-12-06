@@ -11,13 +11,25 @@ const ProjectDrawerMenu = (props: {
         switch (currentItemIndex) {
             case 0:
                 router.push({
-                    pathname: '/management/wages',
+                    pathname: '/management/projectinfo',
                     query: { projectRef }
                 })
                 break;
             case 1:
                 router.push({
                     pathname: '/management/products',
+                    query: { projectRef }
+                })
+                break;
+            case 2:
+                router.push({
+                    pathname: '/management/wages',
+                    query: { projectRef }
+                })
+                break;
+            case 3:
+                router.push({
+                    pathname: '/management',
                     query: { projectRef }
                 })
                 break;
