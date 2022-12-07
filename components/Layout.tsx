@@ -1,6 +1,7 @@
 
 import { useRouter } from "next/router";
-import ProjectDrawer from "./project/ProjectDrawer";
+import ConstructoHeader from "./ConstructoHeader";
+import ProjectHeader from "./project/ProjectHeader";
 
 
 const Layout=(props:{
@@ -8,16 +9,18 @@ const Layout=(props:{
 }) => {
     const { children }  = props
     const router = useRouter();
+    
     if (router.pathname.includes("management"))
         return (
             <div>
-                <ProjectDrawer />
+                <ProjectHeader/>
                 <main>{children}</main> 
             </div>
         )
     else {
         return (
             <>
+                <ConstructoHeader />
                 <main>{children}</main> 
             </>
         )

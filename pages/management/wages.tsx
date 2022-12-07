@@ -110,7 +110,7 @@ const Wages = () => {
             router.replace("/")
     },[router])
 
-    return (<div className="flex flex-col">
+    return (<div className="flex flex-col  m-10">
         <WagesForm onFieldRemove={onFieldRemove} onFormSubmit={onWagesFormSubmit} wagesFormUtils={wagesFormUtils}></WagesForm>
         <button
             className={"button-primary max-w-lg self-end " + (isDirty ? "" : "disabled")}

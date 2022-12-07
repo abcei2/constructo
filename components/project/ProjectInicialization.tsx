@@ -220,7 +220,6 @@ const ProjectInitiation = () => {
 
                 <Stepper stepIndex={stepIndex} stepNames={stepNames} />
                 {stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1 ? productsFormUtils.formId : ""}
-                {buttonType}
                 <div className="mt-8 p-4">
                     
                     <div>
@@ -228,8 +227,6 @@ const ProjectInitiation = () => {
                     </div>
 
                     <div className="flex p-2 mt-4">
-
-                        <button onClick={() => router.push("/")} className="mr-5 button-secondary">volver</button>
                         <button onClick={prevStep} className="button-normal">Previous</button>
                         <div className="flex-auto flex flex-row-reverse">
                             <button

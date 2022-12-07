@@ -164,7 +164,7 @@ const Products = () => {
 
     return (<>
         {
-            !categories ? undefined :<div className="flex flex-col">
+            !categories ? undefined :<div className="flex flex-col m-10">
 
                 <ProductsForm onFieldRemove={onFieldRemove} onFormSubmit={onProductsFormSubmit} categories={categories} productsFormUtils={productsFormUtils}></ProductsForm>
                 <button
