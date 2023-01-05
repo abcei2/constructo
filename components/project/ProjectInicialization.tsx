@@ -165,7 +165,7 @@ const ProjectInitiation = () => {
                     <div className="flex justify-center flex-col text-2xl text-center w-full">
                         Indique el nombre de su proyecto
                         <input value={projectName} onChange={(ev: React.ChangeEvent<HTMLInputElement>)=>setProjectName(ev.target.value)}
-                        className="text-center border-teal-600 rounded border-2 my-5 max-w-xs self-center" />
+                        className="text-center border-[var(--primary-color)] rounded border-2 my-5 max-w-xs self-center" />
                     </div>
 
                 </div>
@@ -174,7 +174,7 @@ const ProjectInitiation = () => {
                     <div className="flex justify-center flex-col text-2xl text-center w-full">
                         Agregue categorías
                         <div className="flex  self-center overflow-hidden py-5 px-5 gap-2">
-                            <input value={currentCategory} onKeyDown={handleKeyDown} onChange={onCategoryNameChange} className="border-teal-600 rounded border-2" />
+                            <input value={currentCategory} onKeyDown={handleKeyDown} onChange={onCategoryNameChange} className="border-[var(--primary-color)] rounded border-2" />
                             <button onClick={addCategory} className="button-secondary">Add</button>
                         </div>
                         {

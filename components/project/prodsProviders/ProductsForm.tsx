@@ -48,7 +48,7 @@ const ProductsForm = (props: ProductsFormPropsType) => {
                 </div>
 
                 <div
-                    className="overflow-auto gap-3 h-64 max-h-64 py-5 border border-2 border-teal-600 rounded"
+                    className="overflow-auto gap-3 h-64 max-h-64 py-5 border border-2 border-[var(--primary-color)] rounded"
                 >
                     <table className="">
                         <thead>

@@ -72,12 +72,12 @@ const ProjectInfo = () => {
                             (oldProjectData)=>({...oldProjectData, name:ev.target.value})
                         )}
                         disabled={true}
-                        className="disabled text-center border-teal-600 rounded border-2 my-5 max-w-xs self-center" />
+                        className="disabled text-center border-[var(--primary-color)] rounded border-2 my-5 max-w-xs self-center" />
                 </div>
                 <div className="my-10 flex justify-center flex-col text-2xl text-center w-full">
                     Agregue categorías
                     <div className="flex  self-center overflow-hidden py-5 px-5 gap-2">
-                        <input value={currentCategory} onKeyDown={handleKeyDown} onChange={onCategoryNameChange} className="border-teal-600 rounded border-2" />
+                        <input value={currentCategory} onKeyDown={handleKeyDown} onChange={onCategoryNameChange} className="border-[var(--primary-color)] rounded border-2" />
                         <button onClick={addCategory} className="button-secondary">Add</button>
                     </div>
                     {

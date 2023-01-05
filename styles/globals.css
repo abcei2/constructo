@@ -1,14 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-    background-color:snow;
+
+.dummy {
+    color: rgb(237, 167, 145)
 }
+@layer utilities {
+    body {
+        background-color: snow;
+    }
+    :root {
+        --primary-color: rgb(206, 100, 68);
+        --secondary-color: rgb(206, 128, 105);
+        --text-color: white;
+        --secondary-hover-color: rgb(237, 167, 145);
+        --base-color: #ededf0;
+        --header-color: #b8b8b84c;
+        --text-size: 5rem;
+    }
+}
+
 @layer components {
 
 
     .normal-input {
-        @apply border border-blue-500 rounded text-center mb-4 
+        @apply border border-[var(--primary-color)] rounded text-center mb-4 
     }
 
     .label-des {
@@ -24,11 +40,11 @@ body {
     }
 
     .step-current {
-        @apply border-teal-600 border-2 bg-teal-600
+        @apply border-[var(--primar-color)] border-2 bg-[var(--primar-color)]
     }
     
     .step-passed {
-        @apply border-teal-600 border-2
+        @apply border-[var(--primar-color)] border-2
     }
 
 
@@ -36,17 +52,17 @@ body {
         @apply text-base hover:scale-110
         focus:outline-none flex justify-center
         px-4 py-2 rounded font-bold cursor-pointer
-        border duration-200 ease-in-out border-teal-600 transition
+        border duration-200 ease-in-out border-[var(--primar-color)] transition
     }
 
     .button-primary {
         @apply button-base
-        ml-2 hover:bg-teal-600 bg-teal-600 text-teal-100
+        ml-2 hover:bg-[var(--primar-color)] bg-[var(--primar-color)] text-[var(--text-color)]
     }
 
     .button-secondary {
         @apply button-base
-        hover:bg-teal-200 bg-teal-100 text-teal-700 
+        hover:bg-[var(--secondary-hover-color)] bg-[var(--secondary-color)] text-[var(--text-color)]
     }
     
     .button-normal {

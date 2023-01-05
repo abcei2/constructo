@@ -15,10 +15,10 @@ const Stepper = (props: { stepIndex: number, stepNames: Array<string> }) => {
                                     <div  className={stepIndex < index ? "step-future step-icon" : stepIndex == index ? "step-current step-icon" : "step-passed step-icon"}>
                                         {index + 1}
                                     </div>
-                                    <div className="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-teal-600">{stepName}</div>
+                                    <div className="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-[var(--primary-color)]">{stepName}</div>
                                 </div>
                                 {
-                                    index < stepNames.length - 1 && <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-teal-600"></div>
+                                    index < stepNames.length - 1 && <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-[var(--primary-color)]"></div>
                                 }
                             </div>
                         )
