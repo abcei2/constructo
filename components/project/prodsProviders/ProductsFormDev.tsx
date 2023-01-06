@@ -11,13 +11,16 @@ import { ProductsFormContext } from "../../../context/ProductsContext";
 const ProductsForm = () => {
 
     const { 
-        onFieldRemove, onFormChange, onFormSubmit, onFormError, 
+        onFieldRemove, 
+        onFormChange, 
+        onFormSubmit, 
+        onFormError, 
         productsFormUtils, categories, 
-        setProductModalData, productModalData,
-        showModal, setShowModal,
-        setModalProductIndex, modalProductIndex,
      } = useContext(ProductsFormContext)
   
+    const [productModalData, setProductModalData] = useState<ProductType | undefined>()
+    const [modalProductIndex, setModalProductIndex] = useState<number>(-1)
+    const [showModal, setShowModal] = useState<boolean>(false)    
 
     const { fields, append, remove, update, handleSubmit, getValues, register, formId, resetField } = productsFormUtils
 

@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect } from "react"; 
-import { useFieldArray, useForm } from "react-hook-form";
 import uuid from "react-uuid";
 import { deleteProduct, getAllCategories, getAllProducts, getProductsData, saveProject } from "../db/project"
 import useProductsForm from "../hooks/project/useProductsForm";
@@ -15,10 +14,6 @@ const ProductsFormContextProvider = (props: {
     defaultValues?: ProductsFormType
 }) => {
     const { children, defaultValues, projectOwner, projectRef} = props
-    //VISUALIZATION STATES
-    const [productModalData, setProductModalData] = useState<ProductType | undefined>()
-    const [modalProductIndex, setModalProductIndex] = useState<number>(-1)
-    const [showModal, setShowModal] = useState<boolean>(false)    
     //FORM STATES
     const productsFormUtils = useProductsForm(defaultValues)
     const { fields, append, formState, reset, getValues, setValue } = productsFormUtils
@@ -27,8 +22,6 @@ const ProductsFormContextProvider = (props: {
     const [categories, setCategories] = useState<Array<Category>>()
     const [retrievingData, setRetrievingData] = useState<boolean>(false)
     const [dataRetrieve, setDataRetrieve] = useState<boolean>(false)
-
-
 
     useEffect(() => {
         if (!retrievingData && !dataRetrieve && projectRef) {
@@ -90,7 +83,7 @@ const ProductsFormContextProvider = (props: {
         }
     }
 
-    const onProductsFormSubmit = (data: ProductsFormType | any) => {
+    const onFormSubmit = (data: ProductsFormType | any) => {
         if (!dataRetrieve || !categories)
             return
         let newProductsProvidersData = undefined
@@ -170,12 +163,7 @@ const ProductsFormContextProvider = (props: {
             {
                 isDirty, dirtyFields,
                 productsFormUtils,
-                onFieldRemove,onProductsFormSubmit,
-
-                productModalData, setProductModalData,
-                showModal, setShowModal,
-                modalProductIndex, setModalProductIndex,
-
+                onFieldRemove,onFormSubmit,
                 categories, setCategories, 
                 retrievingData, setRetrievingData, 
                 dataRetrieve, setDataRetrieve
