@@ -1,107 +1,13 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import uuid from "react-uuid"
-import useWagesForm from "../../hooks/project/useWagesForm"
-import WagesForm from "../../components/project/wages/WagesForm"
+import WagesIndex from "../../components/project/wages"
 import { useAuth } from "../../context/AuthContext"
-import { deleteWage, getAllWages, saveProject } from "../../db/project"
-import { EmployeeWage } from "../../types/dbTypes"
-import { WagesFormTypes } from "../../types/extraTypes"
-
+import { WagesFormContextProvider } from "../../context/WagesContext"
 const Wages = () => {
-    const wagesFormUtils = useWagesForm()
 
     const { user } = useAuth()
     const router = useRouter()
-    const [projectRef, setProjectRef] = useState<string | any>()
-
-
-    const [retrievingData, setRetrievingData] = useState<boolean>(false)
-    const [dataRetrieve, setDataRetrieve] = useState<boolean>(false)
-
-    const { isDirty, dirtyFields } = wagesFormUtils.formState
-
-    const onFieldRemove = (wageField: EmployeeWage) => {
-        if (projectRef && wageField.ref)
-            deleteWage(projectRef,wageField.ref)
-    }
-
-    const onWagesFormSubmit = (data: WagesFormTypes |any) => {
-        if (!dataRetrieve || !user || !projectRef)
-            return
-
-        if (dirtyFields.employeesWage) {
-            const wagesToUpdate = data.employeesWage.map(
-                (wageData: EmployeeWage, wageIndex: number) => {
-
-                    const updatedFields = {
-                        ref: wageData.ref
-                    }
-
-                    if (!wageData.ref) {
-                        const newWageData = {
-                            ...wageData,
-                            ref: uuid()
-                        }
-                        wagesFormUtils.update(wageIndex, newWageData)
-                        return newWageData
-                    }
-
-                    Object.keys(wageData).filter(
-                        (wageKey) => {
-                            if (dirtyFields.employeesWage){
-
-                                if (dirtyFields.employeesWage[wageIndex]) {
-                                    Object.keys(dirtyFields.employeesWage[wageIndex])
-                                    const dirtyEmployees: any = dirtyFields.employeesWage[wageIndex]
-                                    if (Object.keys(dirtyEmployees).includes(wageKey)){
-                                        return dirtyEmployees[wageKey]
-                                    }
-                                }
-                            }
-                        }
-                    ).forEach(
-                        (wageDirtyKey) => {
-                            Object.assign(updatedFields, { [wageDirtyKey]: data.employeesWage[wageIndex][wageDirtyKey] })
-
-                        }
-                    )                    
-                    if (Object.keys(updatedFields).length > 1)
-                        return updatedFields
-
-                }
-
-            ).filter(
-                (updatedFields: any) => updatedFields
-            )
-
-            saveProject(projectRef, user.email, undefined, undefined, undefined, undefined, wagesToUpdate)
-        }
-        wagesFormUtils.reset(wagesFormUtils.getValues(), {
-            keepDirty: false,
-            keepDirtyValues: false
-        });
-    }
-
-    useEffect(() => {
-        
-        if (user && !retrievingData && !dataRetrieve && projectRef) {
-            setRetrievingData(true)
-            getAllWages(projectRef).then(
-                (dbWages) =>{
-                    wagesFormUtils.reset({"employeesWage":dbWages}, {
-                        keepDirty: false,
-                        keepDirtyValues: false
-                    });                 
-                    setDataRetrieve(true)
-                    setRetrievingData(false)
-                }
-
-            )
-            
-        }
-
-    }, [dataRetrieve, wagesFormUtils, retrievingData, user, projectRef])
+    const [projectRef, setProjectRef] = useState<string | any>() 
 
     useEffect(()=>{
         if (router.query.projectRef)
@@ -110,16 +16,9 @@ const Wages = () => {
             router.replace("/")
     },[router])
 
-    return (<div className="flex flex-col  m-10">
-        <WagesForm onFieldRemove={onFieldRemove} onFormSubmit={onWagesFormSubmit} wagesFormUtils={wagesFormUtils}></WagesForm>
-        <button
-            className={"button-primary max-w-lg self-end " + (isDirty ? "" : "disabled")}
-            type="submit"
-            disabled={!isDirty}
-            form={wagesFormUtils.formId}
-        >Save </button>
-    </div>
-    )
+    return (user && projectRef) && <WagesFormContextProvider projectRef={projectRef} projectOwner={user.email}>
+        <WagesIndex/>
+    </WagesFormContextProvider>
 }
 
 export default Wages
