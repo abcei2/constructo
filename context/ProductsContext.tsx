@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import uuid from "react-uuid";
 import { deleteProduct, getAllCategories, getAllProducts, getProductsData, saveProject } from "../db/project"
+import useProductsForm from "../hooks/project/useProductsForm";
 import { Category } from "../types/dbTypes"
 import { CategoryFormType, ProductsFormType, ProductType } from "../types/extraTypes"
 
@@ -19,28 +20,8 @@ const ProductsFormContextProvider = (props: {
     const [modalProductIndex, setModalProductIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)    
     //FORM STATES
-    const formId = "products"
-    const {
-        register,
-        control,
-        handleSubmit,
-        setValue,
-        getValues,
-        getFieldState,
-        reset,
-        formState,
-        resetField
-    } = useForm<ProductsFormType>({
-        mode: "onBlur",
-        defaultValues: defaultValues
-    });
-
-    const { fields, append, remove, update } = useFieldArray({
-        name: formId,
-        control
-    });
-
-
+    const productsFormUtils = useProductsForm(defaultValues)
+    const { fields, append, formState, reset, getValues, setValue } = productsFormUtils
     const { isDirty, dirtyFields } = formState  
     //DATA CONTROL STATES
     const [categories, setCategories] = useState<Array<Category>>()
@@ -188,10 +169,8 @@ const ProductsFormContextProvider = (props: {
         <ProductsFormContext.Provider value={
             {
                 isDirty, dirtyFields,
-                productsFormUtils:{ 
-                    reset, register, setValue, control, getValues, 
-                    fields, append, remove, update, handleSubmit, formId, getFieldState, formState, resetField 
-                },
+                productsFormUtils,
+                onFieldRemove,onProductsFormSubmit,
 
                 productModalData, setProductModalData,
                 showModal, setShowModal,
