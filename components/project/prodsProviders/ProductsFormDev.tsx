@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import Modal from "../../Modal";
 import ProductsModalForm from "./ProductsModalForm";
-import { CategoryFormType, ProductsFormPropsType, ProductType } from "../../../types/extraTypes";
+import { CategoryFormType, ProductType } from "../../../types/extraTypes";
 import { formNumberInput } from "../../../constants";
 import UploadData from "./UploadData";
 
@@ -15,7 +15,7 @@ const ProductsForm = (props: { context: any }) => {
         onProductsFormSubmit, 
         onProductsFormError, 
         productsFormUtils, categories, 
-     } = useContext(props.context)
+     } = useContext<any>(props.context)
   
     const [productModalData, setProductModalData] = useState<ProductType | undefined>()
     const [modalProductIndex, setModalProductIndex] = useState<number>(-1)
@@ -58,7 +58,7 @@ const ProductsForm = (props: { context: any }) => {
                 <div
                     className="overflow-auto gap-3 h-64 max-h-64 py-5 border border-2 border-[var(--primary-color)] rounded"
                 >
-                    <UploadData/>
+                    <UploadData context={props.context}/>
                     <table className="">
                         <thead>
 

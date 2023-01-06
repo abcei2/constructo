@@ -1,45 +1,68 @@
 
+import { useContext } from 'react'
+import uuid from 'react-uuid'
 import readXlsxFile, { Row } from 'read-excel-file'
 import { productsExcelSchema } from '../../../constants'
-import { saveProject } from '../../../db/project'
+import { Category } from '../../../types/dbTypes'
 // File
 
-const distinctsValuesFromArray=(arrayValues:Array<string|number>)=>{
-    const dinstinctsValues:Array<string| number>=[]
+const distinctsValuesFromArray = (arrayValues: Array<string | number>) => {
+    const dinstinctsValues: Array<string | number> = []
     arrayValues.forEach(
-        (value) => !dinstinctsValues.includes(value)?dinstinctsValues.push(value):""
+        (value) => !dinstinctsValues.includes(value) ? dinstinctsValues.push(value) : ""
     )
     return dinstinctsValues
 }
 
-const UploadData = () => { 
+const UploadData = (props: { context: any }) => {
 
-    
-    const onFileChange = async (ev:any) => {
+    const { productsFormUtils, setCategories, categories } = useContext<any>(props.context)
 
-        readXlsxFile(ev.target.files[0], { sheet: 3,
+    const onFileChange = async (ev: any) => {
+
+        readXlsxFile(ev.target.files[0], {
+            sheet: 3,
 
             ignoreEmptyRows: true,
-             schema: productsExcelSchema }).then(
-            ({ rows, errors }) =>{
-                console.log(distinctsValuesFromArray(rows.map(
-                    (row:any) => row.category || "N/A"
-                )))
-                console.log(distinctsValuesFromArray(rows.map(
-                    (row: any) => row.classification || "N/A"
-                )))
-                saveProject()
-                
+            schema: productsExcelSchema
+        }).then(
+            ({ rows, errors }) => {
+
+                const newCategories = [...categories, ...distinctsValuesFromArray(rows.map(
+                    (row: any) => row.category || "N/A"
+                )).map(
+                    (category: any) => ({ ref: uuid(), name: category })
+                )]
+
+                setCategories(newCategories)
+                const newProducts = rows.map(
+                    (row: any) => ({
+                        ref: uuid(),
+                        categoryIndex: (newCategories.findIndex(category => category.name == (row.category || "N/A"))) || {
+                            ref: "-1",
+                            name: "typingworks"
+                        },
+                        name: row.name || "N/A",
+                        brand: row.brands || "N/A",
+                        provider: row.provider || "N/A",
+                        price: row.price || 0,
+                        type: "na",
+                        discount: 0,
+                        performance: 0
+                    })
+                )
+                productsFormUtils.append(newProducts)
+
             }
         )
-     
 
-       
+
+
     }
 
     return <input type="file" onChange={onFileChange} />
 
-   
+
 }
 
 export default UploadData

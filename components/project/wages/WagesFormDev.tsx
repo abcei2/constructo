@@ -10,7 +10,7 @@ const WagesForm = (props:{context:any}={
     context:WagesFormContext
 }) => {
 
-    const { onWagesFormSubmit, onWagesFormError, wagesFormUtils, onWagesFieldRemove }= useContext(props.context)
+    const { onWagesFormSubmit, onWagesFormError, wagesFormUtils, onWagesFieldRemove }= useContext<any>(props.context)
     const [wageModalData, setWageModalData] = useState<EmployeeWage | undefined>()
     const [wageIndex, setWageIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)
