@@ -73,7 +73,7 @@ const ProductsFormContextProvider = (props: {
     }, [dataRetrieve, retrievingData, projectRef])
 
 
-    const onFieldRemove = (productField: ProductType) => {
+    const onProductsFieldRemove = (productField: ProductType) => {
         if (categories && projectRef) {
             const { categoryIndex, ...productToRemove } = productField
             if (productToRemove.ref) {
@@ -83,7 +83,7 @@ const ProductsFormContextProvider = (props: {
         }
     }
 
-    const onFormSubmit = (data: ProductsFormType | any) => {
+    const onProductsFormSubmit = (data: ProductsFormType | any) => {
         if (!dataRetrieve || !categories)
             return
         let newProductsProvidersData = undefined
@@ -163,7 +163,7 @@ const ProductsFormContextProvider = (props: {
             {
                 isDirty, dirtyFields,
                 productsFormUtils,
-                onFieldRemove,onFormSubmit,
+                onProductsFieldRemove,onProductsFormSubmit,
                 categories, setCategories, 
                 retrievingData, setRetrievingData, 
                 dataRetrieve, setDataRetrieve

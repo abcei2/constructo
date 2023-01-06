@@ -1,116 +1,19 @@
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import uuid from "react-uuid"
-import { useAuth } from "../../context/AuthContext"
-import { saveProject } from "../../db/project"
-import { ProdsProviders, Product } from "../../types/dbTypes"
-import { ProductsFormType, WagesFormTypes } from "../../types/extraTypes"
-import useProductsForm from "../../hooks/project/useProductsForm"
-import useWagesForm from "../../hooks/project/useWagesForm"
+import { useContext } from "react"
+import { Category } from "../../types/dbTypes"
 import Stepper from "../Stepper"
-import ProductsForm from "./prodsProviders/ProductsForm"
-import WagesForm from "./wages/WagesForm"
+import ProductsForm from "./prodsProviders/ProductsFormDev"
+import WagesForm from "./wages/WagesFormDev"
+import { InitProjectContext } from "../../context/InitProjectContext"
 
 const ProjectInitiation = () => {
 
-    const { user } = useAuth();
-    const router = useRouter();
 
-    const [projectName, setProjectName] = useState<string>()
-    
-    const [categories, setCategories] = useState<Array<string>>([])
-    const [currentCategory, setCurrentCategory] = useState<string>()
-    const [buttonType, setButtonType] = useState < "button" | "submit" | "reset" | undefined >("button") 
+    const {
+        projectName, setProjectName, categories, setCategories,
+        currentCategory, setCurrentCategory, buttonType,
+        wagesFormUtils, productsFormUtils, stepNames, setStepIndex, stepIndex, nextStep
+    } = useContext(InitProjectContext)
 
-
-    const stepNames = ["Nombrar proyecto", "Agregar categorías", "Crear cargos", "Crear productos"]
-    const [stepIndex, setStepIndex] = useState<number>(0)
-
-    const wagesFormUtils = useWagesForm()
-    const productsFormUtils = useProductsForm()
-
-
-    useEffect(
-        ()=>stepIndex >= 2 ? setButtonType("submit") : setButtonType("button")      
-    , [stepIndex])
-    
-    const indexIncrease = (stepIndex:number) => {
-        if (stepIndex < stepNames.length - 1)
-            setStepIndex(stepIndex + 1)
-    }
-    
-
-    const nextStep = (saveData: boolean) => {
-              
-        
-        switch(stepIndex){
-            case 0:
-                if (saveData && projectName && projectName != "")
-                    indexIncrease(stepIndex)
-                break;
-            case 2 :
-                if (!saveData)
-                    wagesFormUtils.setValue("employeesWage",[])
-                indexIncrease(stepIndex)
-                break;
-            case 3 :
-                console.log(productsFormUtils.getValues())
-
-                if (!saveData)
-                    productsFormUtils.setValue("products", [])
-
-                const projectData = { name: projectName ? projectName : "NO NAME"}
-
-                const wagesData = wagesFormUtils.getValues("employeesWage").map((wage) => {
-                    return {
-                        ...wage,
-                        ref: uuid()
-                    }
-                })
-                const categoriesData = categories.map((name:string) => {                
-                        return {
-                            name,
-                            ref: uuid()
-                        }
-                })
-
-                const prodsProviders:ProdsProviders= {
-                    concept:productsFormUtils.getValues("concept"),
-                    manager: productsFormUtils.getValues("manager"),
-                    updateDate: productsFormUtils.getValues("updateDate"),
-                }
-                
-                const productsData:Array<Product> = []
-                productsFormUtils.getValues("products").map((productFormData) => {
-                    const { categoryIndex, ...product } = productFormData
-                    const productCategory = categoriesData[categoryIndex]  
-                    if (productCategory)                 
-                        productsData.push( {
-                            ...product,
-                            category: productCategory,
-                            ref: uuid()
-                        })
-                })
-                const newProjectRef = uuid()
-                saveProject(
-                    newProjectRef,
-                    user?.email?user.email:"",
-                    projectData,
-                    categoriesData, 
-                    prodsProviders,
-                    productsData,
-                    wagesData
-                )
-                router.push( {
-                    pathname: '/management',
-                    query: { projectRef: newProjectRef }
-                })
-                break;
-            default:
-                indexIncrease(stepIndex)
-                break;
-        }
-    }
 
     const prevStep = () => {
         if (stepIndex > 0)
@@ -118,23 +21,23 @@ const ProjectInitiation = () => {
     }
 
     const addCategory = () => {
-        if (currentCategory){
-            if (!categories.includes(currentCategory)){
+        if (currentCategory) {
+            if (!categories.includes(currentCategory)) {
                 setCurrentCategory("")
-                setCategories(oldCategories => [...oldCategories, currentCategory])
+                setCategories((oldCategories: Array<Category>) => [...oldCategories, currentCategory])
             }
         }
     }
 
     const removeCategory = (categoryIndex: number) => {
         const newCategories = categories.filter(
-            (_, index: number) => index != categoryIndex            
+            (_: any, index: number) => index != categoryIndex
         )
-        productsFormUtils.setValue("products",[])
+        productsFormUtils.setValue("products", [])
         setCategories(newCategories)
     }
 
-    const onCategoryNameChange = (ev: React.ChangeEvent<HTMLInputElement>) =>{
+    const onCategoryNameChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentCategory(ev.target.value);
 
     }
@@ -144,28 +47,14 @@ const ProjectInitiation = () => {
         }
     }
 
-    const onWagesFormSubmit = (data: WagesFormTypes) =>{
-        console.log(data)
-        setStepIndex(stepIndex + 1)
-
-    }
-
-
-    const onProductsFormSubmit = (data: ProductsFormType) => {
-
-        console.log(data)
-        nextStep(true)
-
-    }
-    
     const whichStepContainer = () => {
         switch (stepIndex) {
             case 0:
                 return <div>
                     <div className="flex justify-center flex-col text-2xl text-center w-full">
                         Indique el nombre de su proyecto
-                        <input value={projectName} onChange={(ev: React.ChangeEvent<HTMLInputElement>)=>setProjectName(ev.target.value)}
-                        className="text-center border-[var(--primary-color)] rounded border-2 my-5 max-w-xs self-center" />
+                        <input value={projectName} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setProjectName(ev.target.value)}
+                            className="text-center border-[var(--primary-color)] rounded border-2 my-5 max-w-xs self-center" />
                     </div>
 
                 </div>
@@ -184,7 +73,7 @@ const ProjectInitiation = () => {
                                         key={index}
                                         className="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 transition duration-300 ease">
                                         {category}
-                                        <button onClick={()=>removeCategory(index)} className="bg-transparent hover focus:outline-none">
+                                        <button onClick={() => removeCategory(index)} className="bg-transparent hover focus:outline-none">
                                             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times"
                                                 className="w-3 ml-3" role="img" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 352 512">
@@ -200,53 +89,44 @@ const ProjectInitiation = () => {
                     </div>
                 </div>
             case 2:
-                return <WagesForm 
-                    wagesFormUtils={wagesFormUtils}
-                    onFormSubmit={onWagesFormSubmit} />
+                return <WagesForm context={InitProjectContext} />
             case 3:
-                return <ProductsForm
-                    productsFormUtils={productsFormUtils}
-                    categories={categories.map(category => {return {name:category}})}
-                    onFormSubmit={onProductsFormSubmit}/>
+                return <ProductsForm context={InitProjectContext} />
             default:
                 return
 
         }
     }
 
-    return <>
-        {
-            user && <div className="p-5">
+    return <div className="p-5">
 
-                <Stepper stepIndex={stepIndex} stepNames={stepNames} />
-                {stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1 ? productsFormUtils.formId : ""}
-                <div className="mt-8 p-4">
-                    
-                    <div>
-                        {whichStepContainer()}
-                    </div>
+        <Stepper stepIndex={stepIndex} stepNames={stepNames} />
+        {stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1 ? productsFormUtils.formId : ""}
+        <div className="mt-8 p-4">
 
-                    <div className="flex p-2 mt-4">
-                        <button onClick={prevStep} className="button-normal">Previous</button>
-                        <div className="flex-auto flex flex-row-reverse">
-                            <button
-                                onClick={stepIndex < stepNames.length - 2 ? ()=>nextStep(true):undefined}
-                                className="button-primary"
-                                type={buttonType}
-                                form={stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1?productsFormUtils.formId:""}
-                            >{stepIndex < stepNames.length - 2 ? "Next" : stepIndex == stepNames.length - 2?"Save and continue":"Save and finish"}</button>
-                            {
-                                stepIndex==0?undefined:
-                                    <button onClick={() => nextStep(false)} className="button-secondary">
-                                        {stepIndex < stepNames.length - 2 ? "Skip" : stepIndex == stepNames.length - 2 ? "Skip and continue" : "Skip and finish"}
-                                </button> 
-                            }
-                        </div>
-                    </div>
+            <div>
+                {whichStepContainer()}
+            </div>
+
+            <div className="flex p-2 mt-4">
+                <button onClick={prevStep} className="button-normal">Previous</button>
+                <div className="flex-auto flex flex-row-reverse">
+                    <button
+                        onClick={stepIndex < stepNames.length - 2 ? () => nextStep(true) : undefined}
+                        className="button-primary"
+                        type={buttonType}
+                        form={stepIndex == stepNames.length - 2 ? wagesFormUtils.formId : stepIndex == stepNames.length - 1 ? productsFormUtils.formId : ""}
+                    >{stepIndex < stepNames.length - 2 ? "Next" : stepIndex == stepNames.length - 2 ? "Save and continue" : "Save and finish"}</button>
+                    {
+                        stepIndex == 0 ? undefined :
+                            <button onClick={() => nextStep(false)} className="button-secondary">
+                                {stepIndex < stepNames.length - 2 ? "Skip" : stepIndex == stepNames.length - 2 ? "Skip and continue" : "Skip and finish"}
+                            </button>
+                    }
                 </div>
             </div>
-        }        
-    </>
+        </div>
+    </div>
 
 }
 export default ProjectInitiation

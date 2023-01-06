@@ -6,9 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { formNumberInput } from "../../../constants";
 import { WagesFormContext } from "../../../context/WagesContext";
 
-const WagesForm = () => {
+const WagesForm = (props:{context:any}={
+    context:WagesFormContext
+}) => {
 
-    const { onFormSubmit, onFormError, wagesFormUtils, onFieldRemove }= useContext(WagesFormContext)
+    const { onWagesFormSubmit, onWagesFormError, wagesFormUtils, onWagesFieldRemove }= useContext(props.context)
     const [wageModalData, setWageModalData] = useState<EmployeeWage | undefined>()
     const [wageIndex, setWageIndex] = useState<number>(-1)
     const [showModal, setShowModal] = useState<boolean>(false)
@@ -26,7 +28,7 @@ const WagesForm = () => {
             <h1>SALARIOS</h1>
           </div>
 
-            <form id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)}>
+            <form id={formId} onSubmit={handleSubmit(onWagesFormSubmit, onWagesFormError)}>
 
                 <div
                     className=" overflow-auto gap-3 h-64 max-h-64 py-5 border border-2 border-[var(--primary-color)] rounded"
@@ -77,8 +79,8 @@ const WagesForm = () => {
                                                             keepDirty: false,
                                                             defaultValue: getValues("employeesWage")
                                                         })
-                                                        if (onFieldRemove)
-                                                            onFieldRemove(field)
+                                                        if (onWagesFieldRemove)
+                                                            onWagesFieldRemove(field)
                                                     }
                                                     }
                                                     >

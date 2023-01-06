@@ -4,19 +4,18 @@ import ProductsModalForm from "./ProductsModalForm";
 import { CategoryFormType, ProductsFormPropsType, ProductType } from "../../../types/extraTypes";
 import { formNumberInput } from "../../../constants";
 import UploadData from "./UploadData";
-import { ProductsFormContext } from "../../../context/ProductsContext";
 
 
 
-const ProductsForm = () => {
+const ProductsForm = (props: { context: any }) => {
 
     const { 
-        onFieldRemove, 
-        onFormChange, 
-        onFormSubmit, 
-        onFormError, 
+        onProductsFieldRemove, 
+        onProductsFormChange, 
+        onProductsFormSubmit, 
+        onProductsFormError, 
         productsFormUtils, categories, 
-     } = useContext(ProductsFormContext)
+     } = useContext(props.context)
   
     const [productModalData, setProductModalData] = useState<ProductType | undefined>()
     const [modalProductIndex, setModalProductIndex] = useState<number>(-1)
@@ -33,7 +32,7 @@ const ProductsForm = () => {
                 </Modal>
             }
             <form 
-                className="w-full " id={formId} onSubmit={handleSubmit(onFormSubmit, onFormError)} onChange={onFormChange}>
+                className="w-full " id={formId} onSubmit={handleSubmit(onProductsFormSubmit, onProductsFormError)} onChange={onProductsFormChange}>
                 <div className="flex justify-center m-8 text-2xl font-bold md:text-4xl ">
                     <h1>LISTA DE PRODUCTOS</h1>
                 </div>
@@ -104,8 +103,8 @@ const ProductsForm = () => {
                                                             keepDirty:false,
                                                             defaultValue:getValues("products")
                                                         })
-                                                        if (onFieldRemove)
-                                                            onFieldRemove(field)
+                                                        if (onProductsFieldRemove)
+                                                            onProductsFieldRemove(field)
                                                     }
                                                     }
                                                     >

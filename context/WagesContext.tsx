@@ -46,12 +46,12 @@ const WagesFormContextProvider = (props: {
 
     }, [dataRetrieve, wagesFormUtils, retrievingData, projectRef])
 
-    const onFieldRemove = (wageField: EmployeeWage) => {
+    const onWagesFieldRemove = (wageField: EmployeeWage) => {
         if (projectRef && wageField.ref)
             deleteWage(projectRef, wageField.ref)
     }
 
-    const onFormSubmit = (data: WagesFormTypes | any) => {
+    const onWagesFormSubmit = (data: WagesFormTypes | any) => {
         console.log("submiting", projectRef, dataRetrieve)
 
         if (!dataRetrieve  || !projectRef)
@@ -117,7 +117,7 @@ const WagesFormContextProvider = (props: {
             {
                 isDirty, dirtyFields,
                 wagesFormUtils,
-                onFieldRemove, onFormSubmit,
+                onWagesFieldRemove, onWagesFormSubmit,
                 retrievingData, setRetrievingData, 
                 dataRetrieve, setDataRetrieve
             }}>

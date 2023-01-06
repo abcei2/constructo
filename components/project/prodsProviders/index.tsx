@@ -8,7 +8,7 @@ const ProductsIndex = () => {
         {
             !categories ? undefined : <div className="flex flex-col m-10">
 
-                <ProductsForm />
+                <ProductsForm context={ProductsFormContext} />
                 <button
                     className={"self-end " + (isDirty ? "button-secondary" : "text-[var(--text-color)] px-4 py-2 rounded bg-[var(--secondary-color)] disabled")}
                     type="submit"
